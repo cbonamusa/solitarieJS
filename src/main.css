@@ -1,0 +1,98 @@
+body {
+  margin: 0;
+  height: 1000px;
+  padding: 20px;
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(214, 199, 0, 0.461874)), color-stop(64%, rgba(0, 214, 207, 0.769063)), to(rgba(0, 85, 210, 0.825708))) no-repeat;
+  background: linear-gradient(180deg, rgba(214, 199, 0, 0.461874) 0%, rgba(0, 214, 207, 0.769063) 64%, rgba(0, 85, 210, 0.825708) 100%) no-repeat;
+}
+
+h1 {
+  color: #0055d2;
+  letter-spacing: 1.4px;
+  text-align: center;
+  padding: 28px;
+  font-size: 36px;
+}
+
+.cards-container .pile {
+  height: 160px;
+  width: 120px;
+  border-radius: 15px;
+  background: #0052d639;
+}
+
+.cards-container .card {
+  position: relative;
+  border-radius: 15px;
+  background: white;
+  border: 1px solid #484848;
+  height: 160px;
+  width: 120px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 72px;
+}
+
+.cards-container .card:before, .cards-container .card:after {
+  position: absolute;
+  font-size: 20px;
+  content: attr(data-value);
+}
+
+.cards-container .card:before {
+  top: .5rem;
+  left: .5rem;
+}
+
+.cards-container .card:after {
+  bottom: .5rem;
+  right: .5rem;
+}
+
+.cards-container .card.red {
+  color: red;
+}
+
+.cards-container .card.black {
+  color: black;
+}
+
+.cards-container .main-pile {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (8rem)[2];
+      grid-template-columns: repeat(2, 8rem);
+  -ms-grid-rows: (10rem)[1];
+      grid-template-rows: repeat(1, 10rem);
+  gap: 1rem;
+  margin-bottom: 40px;
+}
+
+.cards-container .foundation-piles {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (8rem)[4];
+      grid-template-columns: repeat(4, 8rem);
+  -ms-grid-rows: (10rem)[1];
+      grid-template-rows: repeat(1, 10rem);
+  gap: 1rem;
+  margin-bottom: 80px;
+}
+
+.cards-container .seven-piles {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (8rem)[7];
+      grid-template-columns: repeat(7, 8rem);
+  -ms-grid-rows: (10rem)[1];
+      grid-template-rows: repeat(1, 10rem);
+  gap: 1rem;
+}
+/*# sourceMappingURL=main.css.map */
