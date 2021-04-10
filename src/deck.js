@@ -1,25 +1,6 @@
 const SUITS = ["♠", "♣", "♥", "♦"];
 const VALUES = ["A", "2", "3", "4" ,"5" ,"6" ,"7" ,"8" ,"9" ,"10" ,"J" ,"Q" ,"K"];
 
-/* Nueva class de cada pila de cartas con estado y funcion quitar carta y poner carta */
-
-export class Pile { //UNDER CONSTRUCTION v.v
-    constructor(cards) {
-        this.stack = cards
-    }
-
-    addCard() {
-
-    }
-    removeCard() {
-
-    }
-
-    validateCard() {
-
-    }
-}
-
 export default class Deck {
     constructor(cards = completeDeck()) {
        this.cards = cards
@@ -28,9 +9,9 @@ export default class Deck {
         return this.cards.length
     }
     /* Shows the first card of the deck pile */
-    pop() {
-        return this.cards.shift()
-    }
+    // pop() {
+    //     return this.cards.shift()
+    // }
     /* Send to the end the card in the pile */
     push(card) {
         this.cards.push(card)
@@ -44,6 +25,42 @@ export default class Deck {
             this.cards[i] = oldValue;
         }
     }
+}
+ 
+class Pile {
+    constructor(cards, pileDiv) {
+        this.cards = cards,
+        this.pileDiv = document.createElement('div');
+        this.pileDiv.innerText = this.numberOfCards;
+        this.pileDiv.classList.add(`pile`);
+    }
+    
+    get numberOfCards() {
+        return this.cards.length
+    }
+    createHTML() {
+        return this.pileDiv
+    }
+
+    refresh() {
+        this.pileDiv.innerText = this.numberOfCards;
+    }
+
+    pushCard(card) {
+        this.refresh();
+        this.cards.unshift(card);
+    }
+    /* Shows the first card of the deck pile */
+    popCard(card) {
+        this.refresh();
+        return this.cards.shift();
+        this.cards.pushCard(card);
+    }
+
+    validateCard() {
+
+    }
+
 }
 
 class Card {
@@ -71,3 +88,12 @@ function completeDeck() {
         })
     })
 }
+
+// function pilesOfCards() {
+//     let pile = new Array();
+//     for ( let i = 1; i <= 7; i++ ) { 
+//         pile.push(new Deck(deck.cards.splice(0,i))); 
+//     }
+// }
+
+export { Pile }
