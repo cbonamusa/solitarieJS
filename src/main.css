@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   margin: 0;
   height: 1000px;
@@ -14,17 +15,73 @@ h1 {
   font-size: 36px;
 }
 
-.cards-container .pile {
+ul {
+  padding: 0;
+}
+
+.game-container {
+  border: 5px solid rgba(5, 0, 99, 0.058);
+  background: rgba(0, 24, 118, 0.407);
+  border-radius: 20px;
+  padding: 25px;
+}
+
+.game-container #gameBoard {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.game-container .information {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  border-bottom: 3px solid white;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.game-container .pile {
   height: 160px;
   width: 120px;
   border-radius: 15px;
-  background: #0052d639;
+  border: 2px dotted rgba(0, 0, 0, 0.25);
+  text-align: center;
+  vertical-align: center;
+  font-family: sans-serif;
+  color: black;
+  font-size: 33px;
 }
 
-.cards-container .card {
-  position: relative;
+.game-container .pile-main {
+  background: url("./cardBack.png") 0 60% no-repeat;
+  background-size: cover;
+}
+
+.game-container .card {
+  position: absolute;
   border-radius: 15px;
-  background: white;
+  background: #fff6f2;
   border: 1px solid #484848;
   height: 160px;
   width: 120px;
@@ -40,67 +97,118 @@ h1 {
   font-size: 72px;
 }
 
-.cards-container .card:before, .cards-container .card:after {
+.game-container .card:before, .game-container .card:after {
   position: absolute;
   font-size: 20px;
   content: attr(data-value);
 }
 
-.cards-container .card:before {
+.game-container .card:before {
   top: .5rem;
   left: .5rem;
 }
 
-.cards-container .card:after {
+.game-container .card:after {
   bottom: .5rem;
   right: .5rem;
 }
 
-.cards-container .card.red {
+.game-container .card.red {
   color: red;
 }
 
-.cards-container .card.black {
+.game-container .card.black {
   color: black;
 }
 
-.cards-container .pile {
-  background: url("./cardBack.png") 0 60% no-repeat;
-  background-size: cover;
-  text-align: center;
-  font-family: sans-serif;
-  font-size: 33px;
-}
-
-.cards-container .main-pile {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (8rem)[2];
-      grid-template-columns: repeat(2, 8rem);
-  -ms-grid-rows: (10rem)[1];
-      grid-template-rows: repeat(1, 10rem);
-  gap: 1rem;
-  margin-bottom: 40px;
-}
-
-.cards-container .foundation-piles {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (8rem)[4];
-      grid-template-columns: repeat(4, 8rem);
-  -ms-grid-rows: (10rem)[1];
-      grid-template-rows: repeat(1, 10rem);
-  gap: 1rem;
-  margin-bottom: 80px;
-}
-
-.cards-container .seven-piles {
+.game-container .first-cards-row {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (8rem)[7];
       grid-template-columns: repeat(7, 8rem);
-  -ms-grid-rows: (10rem)[1];
-      grid-template-rows: repeat(1, 10rem);
   gap: 1rem;
+}
+
+.game-container .first-cards-row .show-pile {
+  position: relative;
+}
+
+.game-container .first-cards-row .show-pile ul {
+  margin: 0;
+  padding: 0;
+}
+
+.game-container .first-cards-row .show-pile ul li:nth-child(1) {
+  top: 0;
+  z-index: 5;
+}
+
+.game-container .first-cards-row .show-pile ul li:nth-child(2) {
+  top: 2px;
+  z-index: 4;
+}
+
+.game-container .first-cards-row .show-pile ul li:nth-child(3) {
+  top: 4px;
+  z-index: 3;
+}
+
+.game-container .first-cards-row .show-pile ul li:nth-child(4) {
+  top: 6px;
+  z-index: 2;
+}
+
+.game-container .first-cards-row .show-pile ul li:nth-child(5) {
+  top: 8px;
+  z-index: 1;
+}
+
+.game-container .first-cards-row .complete-piles {
+  list-style: none;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (8rem)[4];
+      grid-template-columns: repeat(4, 8rem);
+  gap: 1rem;
+}
+
+.game-container .first-cards-row .complete-piles #spade::after {
+  content: '♠';
+}
+
+.game-container .first-cards-row .complete-piles #club::after {
+  content: '♣';
+}
+
+.game-container .first-cards-row .complete-piles #heart::after {
+  content: '♥';
+}
+
+.game-container .first-cards-row .complete-piles #diamond::after {
+  content: '♦';
+}
+
+.game-container .first-cards-row .complete-piles li::after {
+  top: 30px;
+  left: 0;
+  width: 100%;
+  color: #000;
+  font-size: 30px;
+  line-height: 5;
+  text-align: center;
+  opacity: 0.25;
+}
+
+.game-container .second-cards-row {
+  margin-top: 100px;
+}
+
+.game-container .second-cards-row .seven-pile {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (8rem)[7];
+      grid-template-columns: repeat(7, 8rem);
+  gap: 1rem;
+  list-style: none;
 }
 /*# sourceMappingURL=main.css.map */

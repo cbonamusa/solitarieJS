@@ -1,6 +1,7 @@
 const SUITS = ["♠", "♣", "♥", "♦"];
 const VALUES = ["A", "2", "3", "4" ,"5" ,"6" ,"7" ,"8" ,"9" ,"10" ,"J" ,"Q" ,"K"];
 
+
 export default class Deck {
     constructor(cards = completeDeck()) {
        this.cards = cards
@@ -8,10 +9,6 @@ export default class Deck {
     get numberOfCards() {
         return this.cards.length
     }
-    /* Shows the first card of the deck pile */
-    // pop() {
-    //     return this.cards.shift()
-    // }
     /* Send to the end the card in the pile */
     push(card) {
         this.cards.push(card)
@@ -28,39 +25,48 @@ export default class Deck {
 }
  
 class Pile {
-    constructor(cards, pileDiv) {
+    constructor(cards, identif, pileType) {
         this.cards = cards,
+        this.pileType = pileType;
         this.pileDiv = document.createElement('div');
         this.pileDiv.innerText = this.numberOfCards;
-        this.pileDiv.classList.add(`pile`);
+        this.pileDiv.classList.add('pile',`pile-${identif}`);
     }
-    
     get numberOfCards() {
         return this.cards.length
     }
     createHTML() {
         return this.pileDiv
     }
-
     refresh() {
         this.pileDiv.innerText = this.numberOfCards;
     }
-
     pushCard(card) {
-        this.refresh();
         this.cards.unshift(card);
-    }
-    /* Shows the first card of the deck pile */
-    popCard(card) {
         this.refresh();
-        return this.cards.shift();
-        this.cards.pushCard(card);
+    }
+    popCard() {
+        let retCard = this.cards.shift();
+        this.refresh();
+        return retCard;
+    }
+    pushAll(getCards){
+        this.cards = getCards;
+        this.refresh();
+    }
+    popAll(){
+        let retCards = this.cards.reverse();
+        this.cards =[];
+        this.refresh();
+        return retCards;
     }
 
-    validateCard() {
+    matchSuitAndNum(val, suit) {
+        
+    }
+    matchNumAndColor(val, color) {
 
     }
-
 }
 
 class Card {
@@ -69,15 +75,17 @@ class Card {
         this.value = value,
         this.amount = amount + 1,
         this.color = suit === '♣' || suit === '♠' ? 'black' : 'red';
+        this.show = false;
     }
-    
     getHTML() {
-        const cardDiv = document.createElement('div');
-        cardDiv.innerText = this.suit;
-        cardDiv.classList.add("card", this.color);
-        cardDiv.dataset.value = `${this.value} ${this.suit}`;
-        cardDiv.value = `${this.amount}`;
-        return cardDiv
+        const cardEl = document.createElement('li');
+        cardEl.innerText = this.suit;
+        cardEl.classList.add("card", this.color);
+        cardEl.dataset.value = `${this.value} ${this.suit}`;
+        cardEl.dataset.suit =`${this.suit}`;
+        cardEl.setAttribute('draggable', true);
+        cardEl.value = `${this.amount}`;
+        return cardEl
     }
 }
 
@@ -88,12 +96,5 @@ function completeDeck() {
         })
     })
 }
-
-// function pilesOfCards() {
-//     let pile = new Array();
-//     for ( let i = 1; i <= 7; i++ ) { 
-//         pile.push(new Deck(deck.cards.splice(0,i))); 
-//     }
-// }
 
 export { Pile }
