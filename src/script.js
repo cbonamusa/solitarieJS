@@ -67,7 +67,15 @@ function dragEnd() {
     this.classList.remove("invisible");
 }
 /* TODO LIST:
- 00.  */
+ 00. Vincular las piles con el Dom
+ 01. Vincular las cartas con las Piles 
+ 02. Capturar las cartas
+ 03. Comunicar los datos con el renderizado
+ 04. Dinamizar las cartas con show = false y show = true
+ 05. Crear la logica del juego (a que pila van si / no)
+ 06. Cuando se gana el juego
+ 07. Timing ? 
+*/
  test();
  function test() {
     console.log(pile[3]) //4 cartas
