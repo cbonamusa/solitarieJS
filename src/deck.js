@@ -61,8 +61,10 @@ class Pile {
         return retCards;
     }
 
-    matchSuitAndNum(val, suit) {
-        
+    matchSuitAndNum() {
+        if (this.cards.suit == this.suit && this.cards.value) {
+            this.pushCard();
+        }
     }
     matchNumAndColor(val, color) {
 

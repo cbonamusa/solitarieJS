@@ -9,8 +9,8 @@ const showPileDOM = document.querySelector('.show-pile ul');
 document.addEventListener('click', () => {
 })
 
-start();
-function start() {
+// start();
+// function start() {
     //Create the full Deck of cards
     const deck = new Deck();
     deck.shuffle();
@@ -30,7 +30,7 @@ function start() {
 
     //MAIN & SHOW Pile spot in DOM
         mainPileDOM.appendChild(mainPile.createHTML());
-        //Logic to get the cards from main pile to show pile
+        //Get the cards from main pile to show pile
         document.querySelector('.pile-main').addEventListener('click', () => {
             if (mainPile.numberOfCards != 0) {
                 document.querySelector('.pile-main').classList.add('pile');
@@ -48,4 +48,21 @@ function start() {
     console.log('new DECK', new Deck());
     console.log('pile', pile[6]); // 0 - 6
     console.log('mainPile', mainPile.popCard())
+// }
+
+const emptyPiles = document.querySelectorAll('.pile');
+const pickedCard = document.querySelector('.card');
+console.log(pickedCard)
+pickedCard.addEventListener('dragstart', dragStart);
+pickedCard.addEventListener('dragend', dragEnd);
+function dragStart() {
+    /* Once the user clicks the card it desapears from the pile */
+    console.log('start')
+    setTimeout(() => { this.classList.add("invisible")}, 0);
+
+}
+function dragEnd() {
+    /* Once the user releases the card it goes to another pile (or the same it begans) */
+    console.log('end')
+
 }

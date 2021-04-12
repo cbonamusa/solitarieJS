@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-  color: #0055d2;
+  color: #00378a;
   letter-spacing: 1.4px;
   text-align: center;
   padding: 28px;
@@ -78,6 +78,11 @@ ul {
   background-size: cover;
 }
 
+.game-container .pile:hover {
+  -webkit-box-shadow: 1px 1px 40px -5px #088cff;
+          box-shadow: 1px 1px 40px -5px #088cff;
+}
+
 .game-container .card {
   position: absolute;
   border-radius: 15px;
@@ -95,6 +100,10 @@ ul {
       -ms-flex-align: center;
           align-items: center;
   font-size: 72px;
+}
+
+.game-container .card.invisible {
+  display: none;
 }
 
 .game-container .card:before, .game-container .card:after {

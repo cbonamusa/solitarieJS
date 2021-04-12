@@ -4,9 +4,8 @@ body {
     padding: 20px;
     background: linear-gradient(180deg, rgba(214,199,0,0.46187363834422657) 0%, rgba(0,214,207,0.7690631808278867) 64%, rgba(0,85,210,0.8257080610021786) 100%) no-repeat;
 }
-// *, *::after, *::before { box-sizing: border-box;}
 h1 {
-    color: #0055d2;
+    color: #00378a;
     letter-spacing: 1.4px;
     text-align: center;
     padding: 28px;
@@ -50,6 +49,9 @@ ul { padding: 0}
             background: url('./cardBack.png') 0 60% no-repeat;
             background-size: cover;
         }
+        &:hover {
+            box-shadow: 1px 1px 40px -5px rgb(8, 140, 255);
+        }
     }
     .card {
         position: absolute;
@@ -62,6 +64,7 @@ ul { padding: 0}
         display: flex;
         align-items: center;
         font-size: 72px;
+        &.invisible { display: none}
         &:before, &:after {
             position: absolute;
             font-size: 20px;
