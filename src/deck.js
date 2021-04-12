@@ -6,16 +6,13 @@ export default class Deck {
     constructor(cards = completeDeck()) {
        this.cards = cards
     }
-    get numberOfCards() {
-        return this.cards.length
-    }
     /* Send to the end the card in the pile */
     push(card) {
         this.cards.push(card)
     }
     /* Shuffle the cards in random order */
     shuffle() {
-        for ( let i = this.numberOfCards - 1; i > 0; i--) {
+        for ( let i = this.cards.length - 1; i > 0; i--) {
             const newIndex = Math.floor(Math.random() * (i + 1));
             const oldValue = this.cards[newIndex];
             this.cards[newIndex] = this.cards[i];
@@ -62,9 +59,9 @@ class Pile {
     }
 
     matchSuitAndNum() {
-        if (this.cards.suit == this.suit && this.cards.value) {
-            this.pushCard();
-        }
+        // if (this.cards.suit == this.suit && this.cards.value) {
+        //     this.pushCard();
+        // }
     }
     matchNumAndColor(val, color) {
 
