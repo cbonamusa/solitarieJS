@@ -58,13 +58,15 @@ class Pile {
         return retCards;
     }
 
-    matchSuitAndNum() {
-        // if (this.cards.suit == this.suit && this.cards.value) {
+    matchSuitAndNumUp() {
+        // if (this.cards.suit == this.suit && this.cards.value == this.value +1) {
         //     this.pushCard();
         // }
     }
     matchNumAndColor(val, color) {
-
+        // if (this.cards.color !== this.color && this.cards.value == this.value -1) {
+        //     this.pushCard();
+        // }
     }
 }
 

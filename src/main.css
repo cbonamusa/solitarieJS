@@ -74,7 +74,7 @@ ul {
 }
 
 .game-container .pile-main {
-  background: url("./cardBack.png") 0 60% no-repeat;
+  background: url("/public/cardBack.png") 0 60% no-repeat;
   background-size: cover;
 }
 

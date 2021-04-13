@@ -12,19 +12,13 @@ deck.shuffle();
 //Generate all the piles with our deck of cards
 let pile = new Array();
 for ( let i = 1; i <= 7; i++ ) { pile.push(new Pile(deck.cards.splice(0,i), i, `pile-${i}`)); }
-let mainPile = new Pile(deck.cards, 'main');
-let showPile = new Pile(new Array(), 'show');
+let mainPile = new Pile(deck.cards, 'main', 'main');
+let showPile = new Pile(new Array(), 'show', 'show');
 
 let spadePile = new Pile(new Array(), 'spade', '♠');
 let heartPile = new Pile(new Array(), 'heart', '♥');
 let diamondPile = new Pile(new Array(), 'diamond', '♦');
 let clubsPile = new Pile(new Array(), 'clubs', '♣');
-
-//Print in console to test
-console.log('new DECK', new Deck());
-console.log('new PILE Empty', new Pile(new Array(), 'clubs', '♣'));
-console.log('pile with 7', pile[6]); // 0 - 6
-console.log('mainPile popCard', mainPile.popCard())
 
 
 //MAIN & SHOW Pile spot in DOM
@@ -66,18 +60,29 @@ function dragEnd() {
     console.log('end');
     this.classList.remove("invisible");
 }
-/* TODO LIST:
- 00. Vincular las piles con el Dom
- 01. Vincular las cartas con las Piles 
- 02. Capturar las cartas
- 03. Comunicar los datos con el renderizado
- 04. Dinamizar las cartas con show = false y show = true
- 05. Crear la logica del juego (a que pila van si / no)
- 06. Cuando se gana el juego
- 07. Timing ? 
-*/
+
+
  test();
  function test() {
+    //Print in console to test
+    console.log('new DECK', new Deck());
+    console.log('PILE MAIN', mainPile);
+    console.log('PILE SHOW', new Pile(new Array(), 'show', 'show'));
+
+    console.log('PILE spade', spadePile)  
+    console.log('PILE heart', heartPile ) 
+    console.log('PILE diamond', diamondPile) 
+    console.log('PILE club', clubsPile) 
+
+    console.log('PILE-7', pile[0]);
+    console.log('PILE-7', pile[1]);
+    console.log('PILE-7', pile[2]);
+    console.log('PILE-7', pile[3]);
+    console.log('PILE-7', pile[4]);
+    console.log('PILE-7', pile[5]);
+    console.log('PILE-7', pile[6]); 
+
+    console.log('mainPile popCard', mainPile.popCard())
     console.log(pile[3]) //4 cartas
     console.log(pile[3].popCard()) //1 carta del pile-3
 

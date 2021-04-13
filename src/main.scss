@@ -46,7 +46,7 @@ ul { padding: 0}
         color: black;
         font-size: 33px;
         &-main {
-            background: url('./cardBack.png') 0 60% no-repeat;
+            background: url('/public/cardBack.png') 0 60% no-repeat;
             background-size: cover;
         }
         &:hover {
