@@ -41,19 +41,19 @@ document.querySelector('.pile-main').addEventListener('click', () => {
 
 
 
-/*----------------- RENDER CARDS OF GAME PILES  -------------------*/
+/*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F -----------------*/
 function renderPile(pile, index, dataPileDOM ) {
     for( let x = 0; x < pile.cards.length -1 ; x++ ) {
-       dataPileDOM.appendChild(pile.cards[x].generateDOMElement());
+        dataPileDOM.appendChild(pile.cards[x].generateDOMElement());
     }
     dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
+
     let pileDOM = dataPileDOM.querySelectorAll('li');
-    let lastCardinPileDOM = pileDOM[pileDOM.length- 1];
-    // lastCardInPile.addEventListener('dragstart', dragStart(pile));
-    // dataPileDOM.addEventListener('click', clickedCardInPile(pile));
-    // clickedCardInPile(lastCardinPileDOM);
+    let lastCardinPileDOM = pileDOM[pileDOM.length -1];
+
+    clickedCardInPile(lastCardinPileDOM, pile);
  }
- 
+
  function render() {
      for (let i = 0; i < piles.length; i++) {
          renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
@@ -61,37 +61,40 @@ function renderPile(pile, index, dataPileDOM ) {
  }
  render();
 
- function clickedCardInPile(card) {
-    // for ( let pile of piles ) {
-        // pile.cards[0].addEventListener('dragstart', dragStart(pile));
-        // pile.cards[pile.cards.length-1].addEventListener('click', () => {console.log(pile.cards[0])});
-        // card.addEventListener('click', () => {console.log(pile.cards[0])});
-    // }
-    render();
+
+
+/*----------------- CLICK CARDS / DRAG CARDS  -------------------*/ 
+ function clickedCardInPile(lastCardDOM, pileMOD) {
+    // lastCardDOM.addEventListener('click', () => {console.log(pileMOD)});
+    lastCardDOM.addEventListener('dragstart', dragStart(lastCardDOM, pileMOD));
+
+    // render();
  }
-//  clickedCardInPile();
 
  let selectedPile = -1;
 
 
 
-function dragStart(pile) {
+function dragStart(card, pile) {
     /* Once the user clicks the card and moves it pops up from the pile */
     console.log('start');
-    this.classList.add("invisible");
-    console.log(pile.cards) 
+    card.addEventListener('mousedown', () => {
+        setTimeout(()=> {  card.classList.add("invisible") }, 50)
+    })
 }
-function dragEnd() {
+function dragEnd(card, pile) {
     /* Once the user releases the card it goes to another pile (or the same it begans) */
     console.log('end');
-    // this.classList.remove("invisible");
+    card.addEventListener('mouseup', () => {
+        this.classList.remove("invisible");
+    })
+
     for (pile of piles ) {
         pile.addEventListener('dragover', dragOver);
         pile.addEventListener('dragenter', dragEnter);
         pile.addEventListener('dragleave', dragLeave);
         pile.addEventListener('drop', dragDrop);
     }
-
 }
 function dragOver(e) {
     e.preventDefault();

@@ -72,7 +72,7 @@ class Pile {
                 acceptedCard = false;
             break;
             case 'descendence':
-                acceptedCard = card.color != this.cards[this.cards.length-1] && card.amount == this.cards[this.cards.length-1].amount -1
+                acceptedCard = card.color != this.cards[this.cards.length-1] && card.amount == this.cards[this.cards.length-1].amount -1 || this.cards.length == 0 && card.amount == 13;
             break;
             default:
                 acceptedCard = card.suit == this.pileType && card.amount == this.cards[this.cards.length-1].amount +1;
