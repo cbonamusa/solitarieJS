@@ -1,10 +1,15 @@
 const SUITS = ["♠", "♣", "♥", "♦"];
 const VALUES = ["A", "2", "3", "4" ,"5" ,"6" ,"7" ,"8" ,"9" ,"10" ,"J" ,"Q" ,"K"];
+const PILETYPE = {
+    ACCEPTALL: "all",
+    ASCENDENTS: "asc",
+    DESCENDENTS: "des"
+}
 
 
 export default class Deck {
-    constructor(cards = completeDeck()) {
-       this.cards = cards
+    constructor(cards) {
+       this.cards = cards || completeDeck();
     }
     /* Send to the end the card in the pile */
     push(card) {
@@ -25,13 +30,12 @@ class Pile {
     constructor(cards, identif, pileType) {
         this.cards = cards,
         this.pileType = pileType;
+        //externalizar
         this.pileDiv = document.createElement('div');
         this.pileDiv.innerText = this.numberOfCards;
         this.pileDiv.classList.add('pile',`pile-${identif}`);
     }
-    get numberOfCards() {
-        return this.cards.length
-    }
+    get numberOfCards() { return this.cards.length }
     createHTML() {
         return this.pileDiv
     }
@@ -43,7 +47,7 @@ class Pile {
         this.refresh();
     }
     popCard() {
-        let retCard = this.cards.shift();
+        let retCard = this.cards.pop();
         this.refresh();
         return retCard;
     }
@@ -52,33 +56,41 @@ class Pile {
         this.refresh();
     }
     popAll(){
-        let retCards = this.cards.reverse();
+        let retCards = this.cards;
         this.cards =[];
         this.refresh();
         return retCards;
     }
 
-    matchSuitAndNumUp() {
-        // if (this.cards.suit == this.suit && this.cards.value == this.value +1) {
-        //     this.pushCard();
-        // }
-    }
-    matchNumAndColor(val, color) {
-        // if (this.cards.color !== this.color && this.cards.value == this.value -1) {
-        //     this.pushCard();
-        // }
+    canPushCard(card) {
+        let acceptedCard = false;
+        switch(this.pileType) {
+            case 'acceptAll':
+                acceptedCard = true;
+            break;
+            case 'dontAccept':
+                acceptedCard = false;
+            break;
+            case 'descendence':
+                acceptedCard = card.color != this.cards[this.cards.length-1] && card.amount == this.cards[this.cards.length-1].amount -1
+            break;
+            default:
+                acceptedCard = card.suit == this.pileType && card.amount == this.cards[this.cards.length-1].amount +1;
+            break;
+        }
+        this.pushCard(card);
+        return acceptedCard;
     }
 }
 
 class Card {
-    constructor (suit, value, amount ) {
-        this.suit = suit,
-        this.value = value,
-        this.amount = amount + 1,
+    constructor (suit, value, amount) {
+        this.suit = suit;
+        this.value = value;
+        this.amount = amount;
         this.color = suit === '♣' || suit === '♠' ? 'black' : 'red';
-        this.show = false;
     }
-    getHTML() {
+    generateDOMElement(show) {
         const cardEl = document.createElement('li');
         cardEl.innerText = this.suit;
         cardEl.classList.add("card", this.color);
@@ -86,14 +98,15 @@ class Card {
         cardEl.dataset.suit =`${this.suit}`;
         cardEl.setAttribute('draggable', true);
         cardEl.value = `${this.amount}`;
+        show ? cardEl.dataset.show = 'show' : cardEl.dataset.show = 'hide';
         return cardEl
     }
 }
 
 function completeDeck() {
     return SUITS.flatMap(suit => {
-        return VALUES.map((value, amount) => {
-            return new Card(suit, value, amount)
+        return VALUES.map((value, index) => {
+            return new Card(suit, value, index+1)
         })
     })
 }

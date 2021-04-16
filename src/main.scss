@@ -1,6 +1,12 @@
+@mixin reverseCard {
+    background: url('/public/cardBack.png') 0 60% no-repeat;
+    background-size: cover;
+    cursor: pointer;
+}
+/* -------------- GENERAL STYLES --------------*/
 body {
     margin: 0;
-    height: 1000px;
+    height: 100vh;
     padding: 20px;
     background: linear-gradient(180deg, rgba(214,199,0,0.46187363834422657) 0%, rgba(0,214,207,0.7690631808278867) 64%, rgba(0,85,210,0.8257080610021786) 100%) no-repeat;
 }
@@ -13,11 +19,13 @@ h1 {
 }
 ul { padding: 0}
 
+/* -------------- GAME BOARD --------------*/
 .game-container {
     border: 5px solid rgba(5, 0, 99, 0.058);
     background: rgba(0, 24, 118, 0.407);
     border-radius: 20px;
     padding: 25px;
+    height: 70%;
     #gameBoard {
         display: flex;
         flex-direction: column;
@@ -45,16 +53,18 @@ ul { padding: 0}
         font-family: sans-serif;
         color: black;
         font-size: 33px;
+        position: relative;
         &-main {
-            background: url('/public/cardBack.png') 0 60% no-repeat;
-            background-size: cover;
+            @include reverseCard;
         }
         &:hover {
             box-shadow: 1px 1px 40px -5px rgb(8, 140, 255);
         }
     }
+    /* -------------- CARD RENDERING SHOW & BACK PART --------------*/
     .card {
         position: absolute;
+        cursor: pointer;
         border-radius: 15px;
         background: rgb(255, 246, 242);
         border: 1px solid #484848;
@@ -65,27 +75,34 @@ ul { padding: 0}
         align-items: center;
         font-size: 72px;
         &.invisible { opacity : 0; transition:opacity 0.1s;}
-        &:before, &:after {
-            position: absolute;
-            font-size: 20px;
-            content: attr(data-value);
+        &[data-show="show"] {
+            &:before, &:after {
+                position: absolute;
+                font-size: 20px;
+                content: attr(data-value);
+            }
+            &:before {
+                top: .5rem;
+                left: .5rem;
+            }
+            &:after {
+                bottom: .5rem;
+                right: .5rem;
+            }
+            &.red {
+                color: red;
+            }
+            &.black {
+                color: black;
+            }
         }
-        &:before {
-            top: .5rem;
-            left: .5rem;
+        &[data-show="hide"] { 
+            @include reverseCard;
+            color: transparent;
         }
-        &:after {
-            bottom: .5rem;
-            right: .5rem;
-        }
-        &.red {
-            color: red;
-        }
-        &.black {
-            color: black;
-        }
+        
     }
-
+    /* -------------- FIRST ROW OF CARDS TEMPLATE --------------*/
     .first-cards-row {
         display: grid;
         grid-template-columns: repeat(7, 8rem);
@@ -95,11 +112,12 @@ ul { padding: 0}
             ul {
                 margin: 0;
                 padding: 0;
-                li:nth-child(1) { top: 0; z-index: 5; }
-                li:nth-child(2) { top: 2px; z-index: 4; }
-                li:nth-child(3) { top: 4px; z-index: 3; }
-                li:nth-child(4) { top: 6px; z-index: 2; }
-                li:nth-child(5) { top: 8px; z-index: 1; }
+                @for $i from 1 through 5 {
+                    li:nth-child(#{$i}) {
+                        top: $i * 2px; 
+                        z-index:  5 - $i ;
+                    }
+                }
             }
         }
         
@@ -109,20 +127,16 @@ ul { padding: 0}
             grid-template-columns: repeat(4, 8rem);
             gap: 1rem;
             #spade::after {
-                content: '♠';
-                
+                content: '♠';   
             }
             #club::after {
-                content: '♣';
-                
+                content: '♣';   
             }
             #heart::after {
-                content: '♥';
-                
+                content: '♥';   
             }
             #diamond::after {
                 content: '♦';  
-;    
             }
             li::after {
                 top: 30px;
@@ -136,6 +150,7 @@ ul { padding: 0}
             }
         }
     }
+    /* -------------- SECOND ROW OF CARDS TEMPLATE --------------*/
     .second-cards-row {
         margin-top: 100px;
         .seven-pile {
@@ -143,6 +158,20 @@ ul { padding: 0}
             grid-template-columns: repeat(7, 8rem);
             gap: 1rem;
             list-style: none;
+            .pile{                
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    margin-top: -20px;
+                    @for $i from 1 through 20 {
+                        li:nth-child(#{$i}) {
+                            position: absolute;
+                            margin-top: $i * 17px; 
+                            z-index:  50 + $i ;
+                        }
+                    }
+                }
+            }
         }
     }
 }
