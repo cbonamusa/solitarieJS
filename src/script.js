@@ -56,7 +56,6 @@ function renderPile(pile, index, dataPileDOM ) {
     // let pileDOM = dataPileDOM.querySelectorAll('li');
     // let lastCardinPileDOM = pileDOM[pileDOM.length -1];
     // clickedCardInPile(lastCardinPileDOM, pile);
-
  }
 
  function render() {
@@ -72,7 +71,6 @@ function renderPile(pile, index, dataPileDOM ) {
 
 
 
-
 /*----------------- GLOBAL VARS PILES, CARDS ETC.IN MOD & DOM ------------------*/
 let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile]
 for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
@@ -81,7 +79,8 @@ for (let pileMOD of allPilesMOD ) {
     if (pileMOD.cards.length > 0) lastCardInPileMOD = pileMOD.cards[pileMOD.cards.length -1];
 }
 
-const allPilesDOM = document.querySelectorAll('.pile-list');
+let allPilesDOM= document.querySelectorAll('.pile-list');
+console.log('allPilesDOM',allPilesDOM)
 
 let lastCardinPileDOM = [];
 for (let pileDOM of allPilesDOM ) {
@@ -89,7 +88,8 @@ for (let pileDOM of allPilesDOM ) {
          lastCardinPileDOM.push(pileDOM.lastElementChild);  
     }
 }
-console.log(lastCardinPileDOM)  //array canot addevent listener FIX TOMORROW
+console.log(lastCardinPileDOM)  //array canot addevent listener FIX
+
 
 
 
@@ -98,21 +98,22 @@ clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD);
 
 function clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD ) {
 
-    // if (lastCardinPileDOM != null ) {
-    lastCardinPileDOM.addEventListener('mousedown', dragStart(lastCardinPileDOM, allPilesMOD));
+    for(let lastCard of lastCardinPileDOM )  {
+        if(lastCard != null ) {
+            lastCard.addEventListener('mousedown', dragStart(lastCard, allPilesMOD));
+            lastCard.addEventListener('mouseup', dragEnd(lastCard, allPilesMOD));
+        }
 
-
-    // allPilesDOM.forEach(pile => {
-    //     pile.addEventListener('dragover', (e) => {
-    //         e.preventDefault();
-    //         const dragEl = document.querySelector('.dragging')
-    //         pile.appendChild(dragEl);     
-    //     })
-    // });
-
-    if (lastCardinPileDOM != null) { 
-        lastCardinPileDOM.addEventListener('mouseup', dragEnd(lastCardinPileDOM, allPilesMOD));
     }
+
+    allPilesDOM.forEach(pile => {
+        console.log(pile)
+        pile.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dragEl = document.querySelector('.dragging');
+            pile.appendChild(dragEl); 
+        })
+    });
     // render();
  }
 
