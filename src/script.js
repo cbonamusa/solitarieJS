@@ -2,12 +2,11 @@ import Deck from './deck.js';
 import { Pile } from './deck.js';
 
 let querySel = (el) => document.querySelector(el);
-const mainPileDOM = document.querySelector('.main-pile');
-const showPileDOM = document.querySelector('.show-pile ul');
 
 
 
-/*-------------------- CREATE FULL DECK OF CARDS & SHUFLE ---------------------*/
+
+/*--------------------- CREATE FULL DECK OF CARDS & SHUFLE --------------------*/
 const deck = new Deck();
 deck.shuffle();
 
@@ -16,7 +15,7 @@ deck.shuffle();
 /*---------------------- GENERATE ALL PILES WITH CARDS ------------------------*/
 let piles = new Array();
 for ( let i = 1; i <= 7; i++ ) { piles.push(new Pile(deck.cards.splice(0,i), `pile-${i}`, "descendence")); }
-let mainPile = new Pile(deck.cards, 'main', 'dontAccept'); //let mainPile = deck ? TO DO
+let mainPile = new Pile(deck.cards, 'main', 'dontAccept'); //mainPile = deck - pending TO DO
 let showPile = new Pile(new Array(), 'show', 'acceptAll');
 
 let spadePile = new Pile(new Array(), 'spade', '♠');
@@ -24,10 +23,16 @@ let heartPile = new Pile(new Array(), 'heart', '♥');
 let diamondPile = new Pile(new Array(), 'diamond', '♦');
 let clubsPile = new Pile(new Array(), 'clubs', '♣');
 
+const mainPileDOM = document.querySelector('.main-pile');
+const showPileDOM = document.querySelector('.show-pile ul');
 
 
-/*---------- PASS CARDS FROM MAIN TO SHOW PILE (AND RENDER BOTH) -------------*/
+
+
+/*------------ PASS CARDS FROM MAIN TO SHOW PILE (AND RENDER BOTH) -------------*/
 mainPileDOM.appendChild(mainPile.createHTML());
+// mainPileDOM.appendChild(mainPile.cards.generateDOMElement());
+
 document.querySelector('.pile-main').addEventListener('click', () => {
     if (mainPile.numberOfCards != 0) {
         document.querySelector('.pile-main').classList.add('pile');
@@ -41,78 +46,111 @@ document.querySelector('.pile-main').addEventListener('click', () => {
 
 
 
-/*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F -----------------*/
+/*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
 function renderPile(pile, index, dataPileDOM ) {
     for( let x = 0; x < pile.cards.length -1 ; x++ ) {
         dataPileDOM.appendChild(pile.cards[x].generateDOMElement());
     }
     dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
 
-    let pileDOM = dataPileDOM.querySelectorAll('li');
-    let lastCardinPileDOM = pileDOM[pileDOM.length -1];
+    // let pileDOM = dataPileDOM.querySelectorAll('li');
+    // let lastCardinPileDOM = pileDOM[pileDOM.length -1];
+    // clickedCardInPile(lastCardinPileDOM, pile);
 
-    clickedCardInPile(lastCardinPileDOM, pile);
  }
 
  function render() {
      for (let i = 0; i < piles.length; i++) {
          renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
      }
+    // document.querySelector('.pile-main').addEventListener('click', () => {  
+    //     renderPile(showPile, 0, showPileDOM);
+    // })
  }
  render();
 
 
 
-/*----------------- CLICK CARDS / DRAG CARDS  -------------------*/ 
- function clickedCardInPile(lastCardDOM, pileMOD) {
-    // lastCardDOM.addEventListener('click', () => {console.log(pileMOD)});
-    lastCardDOM.addEventListener('dragstart', dragStart(lastCardDOM, pileMOD));
 
+
+/*----------------- GLOBAL VARS PILES, CARDS ETC.IN MOD & DOM ------------------*/
+let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile]
+for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
+let lastCardInPileMOD;
+for (let pileMOD of allPilesMOD ) { 
+    if (pileMOD.cards.length > 0) lastCardInPileMOD = pileMOD.cards[pileMOD.cards.length -1];
+}
+
+const allPilesDOM = document.querySelectorAll('.pile-list');
+
+let lastCardinPileDOM = [];
+for (let pileDOM of allPilesDOM ) {
+    if (pileDOM.hasChildNodes()) {  
+         lastCardinPileDOM.push(pileDOM.lastElementChild);  
+    }
+}
+console.log(lastCardinPileDOM)  //array canot addevent listener FIX TOMORROW
+
+
+
+/*----------------- CLICK CARDS / DRAG CARDS  -------------------*/ 
+clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD);
+
+function clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD ) {
+
+    // if (lastCardinPileDOM != null ) {
+    lastCardinPileDOM.addEventListener('mousedown', dragStart(lastCardinPileDOM, allPilesMOD));
+
+
+    // allPilesDOM.forEach(pile => {
+    //     pile.addEventListener('dragover', (e) => {
+    //         e.preventDefault();
+    //         const dragEl = document.querySelector('.dragging')
+    //         pile.appendChild(dragEl);     
+    //     })
+    // });
+
+    if (lastCardinPileDOM != null) { 
+        lastCardinPileDOM.addEventListener('mouseup', dragEnd(lastCardinPileDOM, allPilesMOD));
+    }
     // render();
  }
 
- let selectedPile = -1;
+let selectedPile = -1;
 
 
-
-function dragStart(card, pile) {
-    /* Once the user clicks the card and moves it pops up from the pile */
-    console.log('start');
-    card.addEventListener('mousedown', () => {
-        setTimeout(()=> {  card.classList.add("invisible") }, 50)
-    })
+function dragStart(lastCardinPileDOM, pile) {
+    /* Once the user clicks the card and moves it pops up from the origin pile */
+    let movedCard;
+    console.log('dragstart lastCardInPileMOD', lastCardInPileMOD)
+    lastCardinPileDOM.addEventListener('dragstart', () => {
+        setTimeout(()=> {  
+            lastCardinPileDOM.classList.add("invisible", "dragging");
+            movedCard = (pile.popCard());
+        }, 50);
+    });
 }
-function dragEnd(card, pile) {
-    /* Once the user releases the card it goes to another pile (or the same it begans) */
-    console.log('end');
-    card.addEventListener('mouseup', () => {
-        this.classList.remove("invisible");
-    })
 
-    for (pile of piles ) {
-        pile.addEventListener('dragover', dragOver);
-        pile.addEventListener('dragenter', dragEnter);
-        pile.addEventListener('dragleave', dragLeave);
-        pile.addEventListener('drop', dragDrop);
-    }
-}
 function dragOver(e) {
+    /* Once the user releases the card it goes to another pile (or the same it begans) */
     e.preventDefault();
-    console.log('over')
 }
-function dragEnter(e) {
-    e.preventDefault();
-    //Añadir clase hoverLike para que se muestre como hover
-    console.log('enter')
+
+function dragEnd(card) {
+    card.addEventListener('dragend', () => {
+        setTimeout(()=> { 
+            card.classList.remove("invisible", "dragging"); 
+        },1)
+    })
 }
-function dragLeave() {console.log('leave')}
-function dragDrop() {console.log('drop')}
 
 
 
 
 
- printInConsoleforTESTING();
+
+
+//  printInConsoleforTESTING();
  function printInConsoleforTESTING() {
     //Print in console to test
     console.log('new DECK', new Deck());
@@ -136,5 +174,4 @@ function dragDrop() {console.log('drop')}
     console.log('mainPile popCard', mainPile.popCard())
     console.log(piles[3]) //4 cartas
     console.log(piles[3].popCard()) //1 carta del pile-3
-
  }

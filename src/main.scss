@@ -57,7 +57,7 @@ ul { padding: 0}
         &-main {
             @include reverseCard;
         }
-        &:hover {
+        &:hover, .fakeHover {
             box-shadow: 1px 1px 40px -5px rgb(8, 140, 255);
         }
     }
@@ -75,7 +75,7 @@ ul { padding: 0}
         align-items: center;
         font-size: 72px;
         &.invisible { opacity : 0; transition:opacity 0.1s;}
-        &[data-show="show"] {
+        &[data-show=true] {
             &:before, &:after {
                 position: absolute;
                 font-size: 20px;
@@ -96,9 +96,12 @@ ul { padding: 0}
                 color: black;
             }
         }
-        &[data-show="hide"] { 
+        &[data-show=false] { 
             @include reverseCard;
             color: transparent;
+        }
+        &:hover, .fakeHover {
+            box-shadow: 1px 1px 40px -5px rgb(255, 164, 8);
         }
         
     }
@@ -166,7 +169,7 @@ ul { padding: 0}
                     @for $i from 1 through 20 {
                         li:nth-child(#{$i}) {
                             position: absolute;
-                            margin-top: $i * 17px; 
+                            margin-top: $i * 22px; 
                             z-index:  50 + $i ;
                         }
                     }

@@ -27,13 +27,13 @@ export default class Deck {
 }
  
 class Pile {
-    constructor(cards, identif, pileType) {
+    constructor(cards, idClass, pileType) {
         this.cards = cards,
         this.pileType = pileType;
-        //externalizar
+        //externalizar - pending TO DO -
         this.pileDiv = document.createElement('div');
         this.pileDiv.innerText = this.numberOfCards;
-        this.pileDiv.classList.add('pile',`pile-${identif}`);
+        this.pileDiv.classList.add('pile',`pile-${idClass}`);
     }
     get numberOfCards() { return this.cards.length }
     createHTML() {
@@ -78,7 +78,7 @@ class Pile {
                 acceptedCard = card.suit == this.pileType && card.amount == this.cards[this.cards.length-1].amount +1;
             break;
         }
-        this.pushCard(card);
+        if (acceptedCard) this.pushCard(card);
         return acceptedCard;
     }
 }
@@ -98,7 +98,7 @@ class Card {
         cardEl.dataset.suit =`${this.suit}`;
         cardEl.setAttribute('draggable', true);
         cardEl.value = `${this.amount}`;
-        show ? cardEl.dataset.show = 'show' : cardEl.dataset.show = 'hide';
+        show ? cardEl.dataset.show = true : cardEl.dataset.show = false ;
         return cardEl
     }
 }

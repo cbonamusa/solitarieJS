@@ -86,7 +86,7 @@ ul {
   cursor: pointer;
 }
 
-.game-container .pile:hover {
+.game-container .pile:hover, .game-container .pile .fakeHover {
   -webkit-box-shadow: 1px 1px 40px -5px #088cff;
           box-shadow: 1px 1px 40px -5px #088cff;
 }
@@ -117,35 +117,40 @@ ul {
   transition: opacity 0.1s;
 }
 
-.game-container .card[data-show="show"]:before, .game-container .card[data-show="show"]:after {
+.game-container .card[data-show=true]:before, .game-container .card[data-show=true]:after {
   position: absolute;
   font-size: 20px;
   content: attr(data-value);
 }
 
-.game-container .card[data-show="show"]:before {
+.game-container .card[data-show=true]:before {
   top: .5rem;
   left: .5rem;
 }
 
-.game-container .card[data-show="show"]:after {
+.game-container .card[data-show=true]:after {
   bottom: .5rem;
   right: .5rem;
 }
 
-.game-container .card[data-show="show"].red {
+.game-container .card[data-show=true].red {
   color: red;
 }
 
-.game-container .card[data-show="show"].black {
+.game-container .card[data-show=true].black {
   color: black;
 }
 
-.game-container .card[data-show="hide"] {
+.game-container .card[data-show=false] {
   background: url("/public/cardBack.png") 0 60% no-repeat;
   background-size: cover;
   cursor: pointer;
   color: transparent;
+}
+
+.game-container .card:hover, .game-container .card .fakeHover {
+  -webkit-box-shadow: 1px 1px 40px -5px #ffa408;
+          box-shadow: 1px 1px 40px -5px #ffa408;
 }
 
 .game-container .first-cards-row {
@@ -247,121 +252,121 @@ ul {
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(1) {
   position: absolute;
-  margin-top: 17px;
+  margin-top: 22px;
   z-index: 51;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(2) {
   position: absolute;
-  margin-top: 34px;
+  margin-top: 44px;
   z-index: 52;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(3) {
   position: absolute;
-  margin-top: 51px;
+  margin-top: 66px;
   z-index: 53;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(4) {
   position: absolute;
-  margin-top: 68px;
+  margin-top: 88px;
   z-index: 54;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(5) {
   position: absolute;
-  margin-top: 85px;
+  margin-top: 110px;
   z-index: 55;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(6) {
   position: absolute;
-  margin-top: 102px;
+  margin-top: 132px;
   z-index: 56;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(7) {
   position: absolute;
-  margin-top: 119px;
+  margin-top: 154px;
   z-index: 57;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(8) {
   position: absolute;
-  margin-top: 136px;
+  margin-top: 176px;
   z-index: 58;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(9) {
   position: absolute;
-  margin-top: 153px;
+  margin-top: 198px;
   z-index: 59;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(10) {
   position: absolute;
-  margin-top: 170px;
+  margin-top: 220px;
   z-index: 60;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(11) {
   position: absolute;
-  margin-top: 187px;
+  margin-top: 242px;
   z-index: 61;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(12) {
   position: absolute;
-  margin-top: 204px;
+  margin-top: 264px;
   z-index: 62;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(13) {
   position: absolute;
-  margin-top: 221px;
+  margin-top: 286px;
   z-index: 63;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(14) {
   position: absolute;
-  margin-top: 238px;
+  margin-top: 308px;
   z-index: 64;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(15) {
   position: absolute;
-  margin-top: 255px;
+  margin-top: 330px;
   z-index: 65;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(16) {
   position: absolute;
-  margin-top: 272px;
+  margin-top: 352px;
   z-index: 66;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(17) {
   position: absolute;
-  margin-top: 289px;
+  margin-top: 374px;
   z-index: 67;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(18) {
   position: absolute;
-  margin-top: 306px;
+  margin-top: 396px;
   z-index: 68;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(19) {
   position: absolute;
-  margin-top: 323px;
+  margin-top: 418px;
   z-index: 69;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(20) {
   position: absolute;
-  margin-top: 340px;
+  margin-top: 440px;
   z-index: 70;
 }
 /*# sourceMappingURL=main.css.map */
