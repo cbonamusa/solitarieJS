@@ -75,19 +75,27 @@ class Pile {
         switch(this.pileType) {
             case 'acceptAll':
                 acceptedCard = true;
+                break;
 
-            break;
             case 'dontAccept':
                 acceptedCard = false;
-            break;
-            case 'descendence': //working OK
-                acceptedCard = card.color != this.cards[this.cards.length-1].color && card.amount == this.cards[this.cards.length-1].amount -1 || this.cards.length == 0 && card.amount == 13;
-            break;
-            default: //can't test yet
-                acceptedCard = card.suit == this.pileType && card.amount == this.cards[this.cards.length-1].amount +1;
-            break;
+                break;
+
+            case 'descendence':
+                acceptedCard = card.color != this.cards[this.cards.length-1].color && card.amount === this.cards[this.cards.length-1].amount -1 || this.cards.length === 0 && card.amount === 13;
+                break;
+
+            default: //piles -> "♠", "♣", "♥", "♦"
+                if (this.cards.length === 0) { 
+                    acceptedCard = card.suit === this.pileType && card.amout === 1;
+                } else {
+                    acceptedCard = card.suit === this.pileType && card.amount === this.cards[this.cards.length-1].amount +1 ; 
+                }
+                break;
         }
-        if (acceptedCard) this.pushCard(card);
+        if (acceptedCard) {
+            this.pushCard(card);
+        }
         return acceptedCard;
     }
 }

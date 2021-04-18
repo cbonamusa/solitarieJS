@@ -98,26 +98,24 @@ let pairsArray = pairsDOM.map(function(item, index) {
 
 
 
-/*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
-clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray);
 
-function clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray ) {
+/*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
+clickedCardInPile( pairsArray );
+
+function clickedCardInPile( pairsArray ) {
 
     for( let b= 0; pairsArray.length > b; b++ )  {
+        console.log(pairsArray)
         if ( pairsArray[b].lastCardinPileDOM != null ) {
             pairsArray[b].lastCardinPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardinPileDOM, pairsArray[b].lastCardInPileMOD, pairsArray[b].pileMOD));
-            pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));                     
-            // pairsArray[b].lastCardinPileDOM.addEventListener('click', () => {
-            //      pairsArray[b].pileMOD.cards.generateDOMElement('show')) //not working
-            // })
-        }
+            pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));        
+        }  
     }
 
     document.querySelector('.pile-main').addEventListener('click', () => {
         showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile.cards[0] , showPile));
-        showPileDOM.firstElementChild.addEventListener('mousemove', dragOver(showPileDOM, showPile, showPileDOM.firstElementChild ));
         showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
-    })
+    });
 }
 
 
@@ -125,35 +123,41 @@ function clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, p
 
 /*----------------------- LOGIC ACCEPTING CARDS AND MOVE-CARDS ------------------------*/ 
 function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
-    let movedCard;
-    let selectedCard2 = selectedCardMOD;
     selectedCardDOM.addEventListener('dragstart', () => {
         selectedCardDOM.id = "dragging";
         setTimeout(()=> {  
             selectedCardDOM.classList.add("invisible");
             pileMOD.popCard();
         }, 50);
-
         pairsArray.forEach(pair => {
-            pair.pileDOM.addEventListener('mousemove', dragOver(pair.pileDOM, pair.pileMOD, pair.lastCardInPileMOD, selectedCard2));
+            pair.pileDOM.addEventListener('mousemove', dragOver(pair.pileDOM, pair.pileMOD, selectedCardMOD));
         });
     });
 }
 
 
-function dragOver(pileDOM, pileMOD, cardMOD, selectedCardMOD) {
-    /* Once the user releases the card it goes to another pile (or the same it begans) */
+function dragOver(pileDOM, pileMOD,  selectedCardMOD) {
+    document.querySelectorAll('.pile');
+    console.log(pileDOM);
+    //? it doesent get into empty PILES even if they are in pileDOM var ?
     pileDOM.addEventListener('dragover', ev => {
-        ev.preventDefault(); 
-        if(pileMOD.canPushCard(selectedCardMOD)) {
+        ev.preventDefault();
+        console.log('draggin over') 
+        pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD,  selectedCardMOD));
+    });
+}
+
+
+function dragDrop(pileDOM, pileMOD,  selectedCardMOD) {
+        if (pileMOD.canPushCard(selectedCardMOD)) {
             if (pileMOD.pileType == 'descendence' ) { 
-                pileDOM.appendChild(document.getElementById('dragging'));
+                pileDOM.appendChild(document.getElementById('dragging'));           
             } else {
                 pileDOM.prepend(document.getElementById('dragging'));
             }
+            pileMOD.canPushCard(selectedCardMOD);
             reCountingPiles();
         }
-    });
 }
 
 
@@ -170,5 +174,9 @@ function dragEnd(card) {
 
 /*----------------------- RECOUNTING CARDS IN PILES EACH MOVE ------------------------*/ 
 function reCountingPiles() {
-
+    /* Update piles once has moved, and click event to show card  */
+    // render(); 
+    // lastCard.addEventListener('click', () => {
+    //      card.generateDOMElement('show') 
+    // })
 };

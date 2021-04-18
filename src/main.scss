@@ -119,6 +119,7 @@ ul { padding: 0}
                     li:nth-child(#{$i}) {
                         top: $i * 2px; 
                         z-index:  5 - $i ;
+
                     }
                 }
             }
