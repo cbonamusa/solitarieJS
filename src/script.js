@@ -52,27 +52,19 @@ function renderPile(pile, index, dataPileDOM ) {
         dataPileDOM.appendChild(pile.cards[x].generateDOMElement());
     }
     dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
-
-    // let pileDOM = dataPileDOM.querySelectorAll('li');
-    // let lastCardinPileDOM = pileDOM[pileDOM.length -1];
-    // clickedCardInPile(lastCardinPileDOM, pile);
 }
 
  function render() {
      for (let i = 0; i < piles.length; i++) {
          renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
      }
-    // document.querySelector('.pile-main').addEventListener('click', () => {  
-    //     renderPile(showPile, 0, showPileDOM);
-    //     clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD);
-    // })
 }
 render();
 
 
 
 
-/*----------------- GLOBAL VARS PILES, CARDS ETC.IN MOD & DOM ------------------*/
+/*-------------------------- GLOBAL MOD & DOM PILES&CARDS --------------------------*/
 let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile]
 for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
 
@@ -82,7 +74,6 @@ for (let pileMOD of allPilesMOD ) {
     if (pileMOD.cards.length > 0) { lastCardInPileMOD = pileMOD.cards[pileMOD.cards.length -1]; }
     pairsMOD.push( {lastCardinPileMOD: pileMOD.cards[pileMOD.cards.length -1], pileMOD});
 }
-
 
 let allPilesDOM= document.querySelectorAll('.pile-list');
 
@@ -106,7 +97,7 @@ let pairsArray = pairsDOM.map(function(item, index) {
 
 
 
-/*----------------- CLICK CARDS / DRAG CARDS  -------------------*/ 
+/*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
 clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray);
 
 function clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray ) {
@@ -117,58 +108,47 @@ function clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, p
             pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));
             pairsArray[b].lastCardinPileDOM.addEventListener('click', () => {console.log('pasar a SHOW')})
         }
- }
+    }
 
     document.querySelector('.pile-main').addEventListener('click', () => {
         showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile));
         showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
     })
-    console.log(allPilesDOM)
-    allPilesDOM.forEach(pile => {
-        console.log('pile child has', pile.hasChildNodes())
-        pile.addEventListener('dragover', (e) => {
-            e.preventDefault(); 
-            if (pile.hasChildNodes()) { 
-                pile.appendChild(document.getElementById('dragging'));
-            } else {
-                pile.createElement(document.getElementById('dragging'));
-            } /* Error append chile node ???? */
-        })
-    });
+    allPilesDOM.forEach(pileDOM => {
+        pileDOM.addEventListener('mousemove', dragOver(pileDOM));
+    })
     // render();
 }
 
-let selectedPile = -1;
 
 
+/*----------------------- LOGIC ACCEPTING CARDS AND MOVE-CARDS ------------------------*/ 
 function dragStart(selectedCard, pileMOD) {
-    /* Once the user clicks the card and moves it pops up from the origin pile */
     let movedCard;
     selectedCard.addEventListener('dragstart', () => {
+        selectedCard.id = "dragging";
         setTimeout(()=> {  
             selectedCard.classList.add("invisible");
-            selectedCard.id = "dragging";
             movedCard = pileMOD.popCard();
         }, 50);
     });
 }
 
-function dragOver(e) {
+function dragOver(pileDOM) {
     /* Once the user releases the card it goes to another pile (or the same it begans) */
-    e.preventDefault();
+    pileDOM.addEventListener('dragover', (e) => {
+        e.preventDefault(); 
+        if (true) { //poner la logica de pile (deck.js)
+            pileDOM.appendChild(document.getElementById('dragging'));
+        } else {
+            // movedCard = pileMOD.pushCard();
+        }
+    });
 }
 
 function dragEnd(card) {
     card.addEventListener('dragend', () => {
-        setTimeout(()=> { 
-            card.classList.remove("invisible"); 
-            card.removeAttribute('id');
-        },1)
+        card.classList.remove("invisible"); 
+        card.removeAttribute('id');
     })
 }
-
-
-
-//  printInConsoleforTESTING();
- function printInConsoleforTESTING() {
- }
