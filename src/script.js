@@ -12,6 +12,7 @@ deck.shuffle();
 
 
 
+
 /*---------------------- GENERATE ALL PILES WITH CARDS ------------------------*/
 let piles = new Array();
 for ( let i = 1; i <= 7; i++ ) { piles.push(new Pile(deck.cards.splice(0,i), `pile-${i}`, "descendence")); }
@@ -31,8 +32,6 @@ const showPileDOM = document.querySelector('.show-pile ul');
 
 /*------------ PASS CARDS FROM MAIN TO SHOW PILE (AND RENDER BOTH) -------------*/
 mainPileDOM.appendChild(mainPile.createHTML());
-// mainPileDOM.appendChild(mainPile.cards.generateDOMElement());
-
 document.querySelector('.pile-main').addEventListener('click', () => {
     if (mainPile.numberOfCards != 0) {
         document.querySelector('.pile-main').classList.add('pile');
@@ -46,6 +45,7 @@ document.querySelector('.pile-main').addEventListener('click', () => {
 
 
 
+
 /*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
 function renderPile(pile, index, dataPileDOM ) {
     for( let x = 0; x < pile.cards.length -1 ; x++ ) {
@@ -56,7 +56,7 @@ function renderPile(pile, index, dataPileDOM ) {
     // let pileDOM = dataPileDOM.querySelectorAll('li');
     // let lastCardinPileDOM = pileDOM[pileDOM.length -1];
     // clickedCardInPile(lastCardinPileDOM, pile);
- }
+}
 
  function render() {
      for (let i = 0; i < piles.length; i++) {
@@ -64,9 +64,10 @@ function renderPile(pile, index, dataPileDOM ) {
      }
     // document.querySelector('.pile-main').addEventListener('click', () => {  
     //     renderPile(showPile, 0, showPileDOM);
+    //     clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD);
     // })
- }
- render();
+}
+render();
 
 
 
@@ -74,60 +75,80 @@ function renderPile(pile, index, dataPileDOM ) {
 /*----------------- GLOBAL VARS PILES, CARDS ETC.IN MOD & DOM ------------------*/
 let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile]
 for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
+
 let lastCardInPileMOD;
+let pairsMOD = [];
 for (let pileMOD of allPilesMOD ) { 
-    if (pileMOD.cards.length > 0) lastCardInPileMOD = pileMOD.cards[pileMOD.cards.length -1];
+    if (pileMOD.cards.length > 0) { lastCardInPileMOD = pileMOD.cards[pileMOD.cards.length -1]; }
+    pairsMOD.push( {lastCardinPileMOD: pileMOD.cards[pileMOD.cards.length -1], pileMOD});
 }
+
 
 let allPilesDOM= document.querySelectorAll('.pile-list');
-console.log('allPilesDOM',allPilesDOM)
 
 let lastCardinPileDOM = [];
+let pairsDOM = [];
 for (let pileDOM of allPilesDOM ) {
-    if (pileDOM.hasChildNodes()) {  
-         lastCardinPileDOM.push(pileDOM.lastElementChild);  
-    }
+    if (pileDOM.hasChildNodes()) { lastCardinPileDOM.push(pileDOM.lastElementChild); }
+    pairsDOM.push({lastCardinPileDOM: pileDOM.lastElementChild, pileDOM}) 
 }
-console.log(lastCardinPileDOM)  //array canot addevent listener FIX
+
+
+let pairsArray = pairsDOM.map(function(item, index) {
+   return {
+        lastCardinPileDOM: item.lastCardinPileDOM, 
+        pileDOM: item.pileDOM,
+        lastCardInPileMOD: pairsMOD[index].lastCardinPileMOD,
+        pileMOD: pairsMOD[index].pileMOD
+    }
+})
 
 
 
 
 /*----------------- CLICK CARDS / DRAG CARDS  -------------------*/ 
-clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD);
+clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray);
 
-function clickedCardInPile(lastCardinPileDOM, allPilesDOM, allPilesMOD ) {
+function clickedCardInPile(lastCardinPileDOM, allPilesDOM, pairsMOD, pairsDOM, pairsArray ) {
 
-    for(let lastCard of lastCardinPileDOM )  {
-        if(lastCard != null ) {
-            lastCard.addEventListener('mousedown', dragStart(lastCard, allPilesMOD));
-            lastCard.addEventListener('mouseup', dragEnd(lastCard, allPilesMOD));
+    for( let b= 0; pairsArray.length > b; b++ )  {
+        if ( pairsArray[b].lastCardinPileDOM != null ) {
+            pairsArray[b].lastCardinPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardinPileDOM, pairsArray[b].pileMOD));
+            pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));
+            pairsArray[b].lastCardinPileDOM.addEventListener('click', () => {console.log('pasar a SHOW')})
         }
+ }
 
-    }
-
+    document.querySelector('.pile-main').addEventListener('click', () => {
+        showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile));
+        showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
+    })
+    console.log(allPilesDOM)
     allPilesDOM.forEach(pile => {
-        console.log(pile)
+        console.log('pile child has', pile.hasChildNodes())
         pile.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const dragEl = document.querySelector('.dragging');
-            pile.appendChild(dragEl); 
+            e.preventDefault(); 
+            if (pile.hasChildNodes()) { 
+                pile.appendChild(document.getElementById('dragging'));
+            } else {
+                pile.createElement(document.getElementById('dragging'));
+            } /* Error append chile node ???? */
         })
     });
     // render();
- }
+}
 
 let selectedPile = -1;
 
 
-function dragStart(lastCardinPileDOM, pile) {
+function dragStart(selectedCard, pileMOD) {
     /* Once the user clicks the card and moves it pops up from the origin pile */
     let movedCard;
-    console.log('dragstart lastCardInPileMOD', lastCardInPileMOD)
-    lastCardinPileDOM.addEventListener('dragstart', () => {
+    selectedCard.addEventListener('dragstart', () => {
         setTimeout(()=> {  
-            lastCardinPileDOM.classList.add("invisible", "dragging");
-            movedCard = (pile.popCard());
+            selectedCard.classList.add("invisible");
+            selectedCard.id = "dragging";
+            movedCard = pileMOD.popCard();
         }, 50);
     });
 }
@@ -140,39 +161,14 @@ function dragOver(e) {
 function dragEnd(card) {
     card.addEventListener('dragend', () => {
         setTimeout(()=> { 
-            card.classList.remove("invisible", "dragging"); 
+            card.classList.remove("invisible"); 
+            card.removeAttribute('id');
         },1)
     })
 }
 
 
 
-
-
-
-
 //  printInConsoleforTESTING();
  function printInConsoleforTESTING() {
-    //Print in console to test
-    console.log('new DECK', new Deck());
-    console.log('PILE MAIN', mainPile);
-    console.log('PILE SHOW', showPile);
-
-    console.log('PILE spade', spadePile)  
-    console.log('PILE heart', heartPile ) 
-    console.log('PILE diamond', diamondPile) 
-    console.log('PILE club', clubsPile) 
-
-    console.log('PILE-1', piles[0]);
-    console.log('PILE-2', piles[1]);
-    console.log('PILE-3', piles[2]);
-    console.log('PILE-4', piles[3]);
-    console.log('PILE-5', piles[4]);
-    console.log('PILE-6', piles[5]);
-    console.log('PILE-7', piles[6]); 
-    console.log('all piles', piles);
-    console.log('LAST CARD OF PILE 7', piles[6].cards.length)
-    console.log('mainPile popCard', mainPile.popCard())
-    console.log(piles[3]) //4 cartas
-    console.log(piles[3].popCard()) //1 carta del pile-3
  }
