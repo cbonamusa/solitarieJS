@@ -105,7 +105,6 @@ clickedCardInPile( pairsArray );
 function clickedCardInPile( pairsArray ) {
 
     for( let b= 0; pairsArray.length > b; b++ )  {
-        console.log(pairsArray)
         if ( pairsArray[b].lastCardinPileDOM != null ) {
             pairsArray[b].lastCardinPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardinPileDOM, pairsArray[b].lastCardInPileMOD, pairsArray[b].pileMOD));
             pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));        
@@ -138,11 +137,10 @@ function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
 
 function dragOver(pileDOM, pileMOD,  selectedCardMOD) {
     document.querySelectorAll('.pile');
-    console.log(pileDOM);
     //? it doesent get into empty PILES even if they are in pileDOM var ?
     pileDOM.addEventListener('dragover', ev => {
         ev.preventDefault();
-        console.log('draggin over') 
+        // console.log('draggin over') 
         pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD,  selectedCardMOD));
     });
 }
