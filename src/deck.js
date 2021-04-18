@@ -1,3 +1,4 @@
+/* ---------------------------------- VARIABLES ----------------------------------*/
 const SUITS = ["♠", "♣", "♥", "♦"];
 const VALUES = ["A", "2", "3", "4" ,"5" ,"6" ,"7" ,"8" ,"9" ,"10" ,"J" ,"Q" ,"K"];
 const PILETYPE = {
@@ -7,6 +8,9 @@ const PILETYPE = {
 }
 
 
+
+
+/* ---------------------------------- DECK ----------------------------------*/
 export default class Deck {
     constructor(cards) {
        this.cards = cards || completeDeck();
@@ -25,7 +29,11 @@ export default class Deck {
         }
     }
 }
- 
+
+
+
+
+/* ---------------------------------- PILE ----------------------------------*/
 class Pile {
     constructor(cards, idClass, pileType) {
         this.cards = cards,
@@ -67,14 +75,15 @@ class Pile {
         switch(this.pileType) {
             case 'acceptAll':
                 acceptedCard = true;
+
             break;
             case 'dontAccept':
                 acceptedCard = false;
             break;
-            case 'descendence':
-                acceptedCard = card.color != this.cards[this.cards.length-1] && card.amount == this.cards[this.cards.length-1].amount -1 || this.cards.length == 0 && card.amount == 13;
+            case 'descendence': //working OK
+                acceptedCard = card.color != this.cards[this.cards.length-1].color && card.amount == this.cards[this.cards.length-1].amount -1 || this.cards.length == 0 && card.amount == 13;
             break;
-            default:
+            default: //can't test yet
                 acceptedCard = card.suit == this.pileType && card.amount == this.cards[this.cards.length-1].amount +1;
             break;
         }
@@ -83,6 +92,10 @@ class Pile {
     }
 }
 
+
+
+
+/* ---------------------------------- CARD ----------------------------------*/
 class Card {
     constructor (suit, value, amount) {
         this.suit = suit;
@@ -103,6 +116,10 @@ class Card {
     }
 }
 
+
+
+
+/* --------------------------- CREATE FULL DECK WITH CARDS ----------------------------*/
 function completeDeck() {
     return SUITS.flatMap(suit => {
         return VALUES.map((value, index) => {
@@ -111,4 +128,8 @@ function completeDeck() {
     })
 }
 
+
+
+
+/* -------------------------------------- EXPORT --------------------------------------*/
 export { Pile }
