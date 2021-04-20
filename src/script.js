@@ -166,15 +166,16 @@ function dragEnd(card) {
     })
 }
 
-
-
+function cleanPiles(pairsArray) {
+    pairsArray.forEach(pile => {
+        pile.pileDOM.innerHTML = "";
+    })
+}
 
 
 /*----------------------- RECOUNTING CARDS IN PILES EACH MOVE ------------------------*/ 
 function reCountingPiles() {
     /* Update piles once has moved, and click event to show card  */
-    // render(); 
-    // lastCard.addEventListener('click', () => {
-    //      card.generateDOMElement('show') 
-    // })
+    // cleanPiles(pairsArray); //not working PROPERLY
+    // render();
 };
