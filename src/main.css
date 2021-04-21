@@ -20,6 +20,10 @@ ul {
   padding: 0;
 }
 
+.pile-list {
+  min-height: 150px;
+}
+
 /* -------------- GAME BOARD --------------*/
 .game-container {
   border: 5px solid rgba(5, 0, 99, 0.058);

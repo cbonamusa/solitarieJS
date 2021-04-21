@@ -41,73 +41,73 @@ document.querySelector('.pile-main').addEventListener('click', () => {
         mainPile.pushAll(showPile.popAll());
         showPileDOM.innerHTML = '';
     }   
-})
+}) // todo al render !!! 
 
+
+
+/*-------------------------- GLOBAL MOD & DOM PILES&CARDS --------------------------*/
+let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile];
+for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
+
+let lastCardInPileDOM = [];
+let lastCardInPileMOD = [];
+let pairsDOM = [];
+let pairsMOD = [];
+let pairsArray = [];
+
+let allPilesDOM = document.querySelectorAll('.pile-list');
 
 
 
 /*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
 function renderPile(pile, index, dataPileDOM ) {
-    for( let x = 0; x < pile.cards.length -1 ; x++ ) {
-        dataPileDOM.appendChild(pile.cards[x].generateDOMElement());
+    for( let x = 0; x < pile.cards.length ; x++ ) {
+        dataPileDOM.appendChild(pile.cards[x].generateDOMElement('show'));
     }
-    dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
+    // dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
 }
 
  function render() {
-     for (let i = 0; i < piles.length; i++) {
-         renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
-     }
+    lastCardInPileMOD = [];
+    pairsMOD = [];
+    for (let pileMOD of allPilesMOD ) { 
+        if (pileMOD.cards.length > 0) { lastCardInPileMOD.push(pileMOD.cards[pileMOD.cards.length -1]) }
+        pairsMOD.push( {lastCardInPileMOD: pileMOD.cards[pileMOD.cards.length -1], pileMOD});
+    }
+
+    for (let i = 0; i < piles.length; i++) {
+        renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
+    }
+
+    lastCardInPileDOM = [];
+    pairsDOM = [];
+    for (let pileDOM of allPilesDOM ) {
+        if (pileDOM.hasChildNodes()) { lastCardInPileDOM.push(pileDOM.lastElementChild); }
+        pairsDOM.push({lastCardInPileDOM: pileDOM.lastElementChild, pileDOM}) 
+    }
+    
+    pairsArray = pairsDOM.map(function(item, index) {
+       return {
+            lastCardInPileDOM: item.lastCardInPileDOM, 
+            pileDOM: item.pileDOM,
+            lastCardInPileMOD: pairsMOD[index].lastCardInPileMOD,
+            pileMOD: pairsMOD[index].pileMOD
+        }
+    });
+    
+
+    clickedCardInPile( pairsArray ); //cambiarnombre a prepare events
 }
 render();
 
 
 
-
-/*-------------------------- GLOBAL MOD & DOM PILES&CARDS --------------------------*/
-let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile]
-for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
-
-let lastCardInPileMOD = [];
-let pairsMOD = [];
-for (let pileMOD of allPilesMOD ) { 
-    if (pileMOD.cards.length > 0) { lastCardInPileMOD.push(pileMOD.cards[pileMOD.cards.length -1]) }
-    pairsMOD.push( {lastCardinPileMOD: pileMOD.cards[pileMOD.cards.length -1], pileMOD});
-}
-
-
-let allPilesDOM= document.querySelectorAll('.pile-list');
-
-let lastCardinPileDOM = [];
-let pairsDOM = [];
-for (let pileDOM of allPilesDOM ) {
-    if (pileDOM.hasChildNodes()) { lastCardinPileDOM.push(pileDOM.lastElementChild); }
-    pairsDOM.push({lastCardinPileDOM: pileDOM.lastElementChild, pileDOM}) 
-}
-
-
-let pairsArray = pairsDOM.map(function(item, index) {
-   return {
-        lastCardinPileDOM: item.lastCardinPileDOM, 
-        pileDOM: item.pileDOM,
-        lastCardInPileMOD: pairsMOD[index].lastCardinPileMOD,
-        pileMOD: pairsMOD[index].pileMOD
-    }
-});
-
-
-
-
-
 /*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
-clickedCardInPile( pairsArray );
-
 function clickedCardInPile( pairsArray ) {
-
     for( let b= 0; pairsArray.length > b; b++ )  {
-        if ( pairsArray[b].lastCardinPileDOM != null ) {
-            pairsArray[b].lastCardinPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardinPileDOM, pairsArray[b].lastCardInPileMOD, pairsArray[b].pileMOD));
-            pairsArray[b].lastCardinPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardinPileDOM));        
+        if ( pairsArray[b].lastCardInPileDOM != null ) {
+            pairsArray[b].lastCardInPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardInPileDOM, pairsArray[b].lastCardInPileMOD, pairsArray[b].pileMOD));
+            pairsArray[b].lastCardInPileDOM.addEventListener('mouseup', dragEnd(pairsArray[b].lastCardInPileDOM));        
         }  
     }
 
@@ -122,12 +122,14 @@ function clickedCardInPile( pairsArray ) {
 
 /*----------------------- LOGIC ACCEPTING CARDS AND MOVE-CARDS ------------------------*/ 
 function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
+    console.log('dragstart', pairsArray);
     selectedCardDOM.addEventListener('dragstart', () => {
         selectedCardDOM.id = "dragging";
         setTimeout(()=> {  
             selectedCardDOM.classList.add("invisible");
             pileMOD.popCard();
         }, 50);
+        console.log('dragstart', pairsArray);
         pairsArray.forEach(pair => {
             pair.pileDOM.addEventListener('mousemove', dragOver(pair.pileDOM, pair.pileMOD, selectedCardMOD));
         });
@@ -140,7 +142,7 @@ function dragOver(pileDOM, pileMOD,  selectedCardMOD) {
     //? it doesent get into empty PILES even if they are in pileDOM var ?
     pileDOM.addEventListener('dragover', ev => {
         ev.preventDefault();
-        // console.log('draggin over') 
+        console.log('draggin over') 
         pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD,  selectedCardMOD));
     });
 }
@@ -153,9 +155,10 @@ function dragDrop(pileDOM, pileMOD,  selectedCardMOD) {
             } else {
                 pileDOM.prepend(document.getElementById('dragging'));
             }
-            pileMOD.canPushCard(selectedCardMOD);
             reCountingPiles();
         }
+        console.log('dragDrop', pairsArray)
+
 }
 
 
@@ -165,6 +168,9 @@ function dragEnd(card) {
         card.removeAttribute('id');
     })
 }
+
+
+
 
 function cleanPiles(pairsArray) {
     pairsArray.forEach(pile => {
@@ -176,6 +182,6 @@ function cleanPiles(pairsArray) {
 /*----------------------- RECOUNTING CARDS IN PILES EACH MOVE ------------------------*/ 
 function reCountingPiles() {
     /* Update piles once has moved, and click event to show card  */
-    // cleanPiles(pairsArray); //not working PROPERLY
-    // render();
+    cleanPiles(pairsArray); //not working PROPERLY
+    render();
 };

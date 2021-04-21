@@ -51,7 +51,7 @@ class Pile {
         this.pileDiv.innerText = this.numberOfCards;
     }
     pushCard(card) {
-        this.cards.unshift(card);
+        this.cards.push(card);
         this.refresh();
     }
     popCard() {
