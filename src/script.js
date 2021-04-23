@@ -42,29 +42,31 @@ const mainPileDOM = document.querySelector('.main-pile');
 const showPileDOM = document.querySelector('.show-pile ul');
 const allPilesDOM = document.querySelectorAll('.pile-list');
 
-
+let divMainPile = document.createElement('div');
+divMainPile.innerText = mainPile.cards.length;
+divMainPile.classList.add('pile', 'pile-main')
+mainPileDOM.appendChild(divMainPile);
 
 
 
 
 /*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
-function renderPile(pile, index, dataPileDOM ) {
+function renderPile(pile,  dataPileDOM ) {
+    dataPileDOM.innerHTML = '';
     for( let x = 0; x < pile.cards.length ; x++ ) {
         dataPileDOM.appendChild(pile.cards[x].generateDOMElement('show'));
     }
-    // dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
+    //dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
 }
-let divMainPile = document.createElement('div');
-divMainPile.innerText = mainPile.cards.length;
-divMainPile.classList.add('pile', 'pile-main')
-mainPileDOM.appendChild(divMainPile);
+
 function render() {
     /* --- render main pile and show --- */
     document.querySelector('.pile-main').addEventListener('click', () => {
         if (mainPile.cards.length != 0) {
             showPile.unshiftCard(mainPile.cards.pop());
-            showPileDOM.prepend(showPile.cards[0].generateDOMElement('show'));
+            // showPileDOM.prepend(showPile.cards[0].generateDOMElement('show'));
             divMainPile.innerText = mainPile.cards.length;
+            renderPile(showPile, showPileDOM)
         } else {
             mainPile.pushAll(showPile.popAll());
             showPileDOM.innerHTML = '';
@@ -83,7 +85,7 @@ function render() {
     }
 
     for (let i = 0; i < piles.length; i++) {
-        renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
+        renderPile(piles[i], querySel(`[data-pile="${i+1}"] ul`))
     }
 
     /* --- DOMAIN  --- */
@@ -119,10 +121,10 @@ function cardsEventsForGaming( pairsArray ) {
         }  
     }
 
-    document.querySelector('.pile-main').addEventListener('click', () => {
-        showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile.cards[0] , showPile));
-        showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
-    });
+    // document.querySelector('.pile-main').addEventListener('click', () => {
+    //     showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile.cards[0] , showPile));
+    //     showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
+    // });
 }
 
 
