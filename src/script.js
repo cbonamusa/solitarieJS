@@ -16,7 +16,8 @@ deck.shuffle();
 /*---------------------- GENERATE ALL PILES WITH CARDS ------------------------*/
 let piles = new Array();
 for ( let i = 1; i <= 7; i++ ) { piles.push(new Pile(deck.cards.splice(0,i), `pile-${i}`, "descendence")); }
-let mainPile = new Pile(deck.cards, 'main', 'dontAccept'); //mainPile = deck - pending TO DO
+//let mainPile = new Pile(deck.cards, 'main', 'dontAccept'); 
+let mainPile = deck;
 let showPile = new Pile(new Array(), 'show', 'acceptAll');
 
 let spadePile = new Pile(new Array(), 'spade', '♠');
@@ -24,24 +25,6 @@ let heartPile = new Pile(new Array(), 'heart', '♥');
 let diamondPile = new Pile(new Array(), 'diamond', '♦');
 let clubsPile = new Pile(new Array(), 'clubs', '♣');
 
-const mainPileDOM = document.querySelector('.main-pile');
-const showPileDOM = document.querySelector('.show-pile ul');
-
-
-
-
-/*------------ PASS CARDS FROM MAIN TO SHOW PILE (AND RENDER BOTH) -------------*/
-mainPileDOM.appendChild(mainPile.createHTML());
-document.querySelector('.pile-main').addEventListener('click', () => {
-    if (mainPile.numberOfCards != 0) {
-        document.querySelector('.pile-main').classList.add('pile');
-        showPile.pushCard(mainPile.popCard());
-        showPileDOM.prepend(showPile.cards[0].generateDOMElement('show'));
-    } else {
-        mainPile.pushAll(showPile.popAll());
-        showPileDOM.innerHTML = '';
-    }   
-}) // todo al render !!! 
 
 
 
@@ -55,7 +38,12 @@ let pairsDOM = [];
 let pairsMOD = [];
 let pairsArray = [];
 
-let allPilesDOM = document.querySelectorAll('.pile-list');
+const mainPileDOM = document.querySelector('.main-pile');
+const showPileDOM = document.querySelector('.show-pile ul');
+const allPilesDOM = document.querySelectorAll('.pile-list');
+
+
+
 
 
 
@@ -66,8 +54,27 @@ function renderPile(pile, index, dataPileDOM ) {
     }
     // dataPileDOM.appendChild(pile.cards[pile.cards.length-1].generateDOMElement('show'));
 }
+let divMainPile = document.createElement('div');
+divMainPile.innerText = mainPile.cards.length;
+divMainPile.classList.add('pile', 'pile-main')
+mainPileDOM.appendChild(divMainPile);
+function render() {
+    /* --- render main pile and show --- */
+    document.querySelector('.pile-main').addEventListener('click', () => {
+        if (mainPile.cards.length != 0) {
+            showPile.unshiftCard(mainPile.cards.pop());
+            showPileDOM.prepend(showPile.cards[0].generateDOMElement('show'));
+            divMainPile.innerText = mainPile.cards.length;
+        } else {
+            mainPile.pushAll(showPile.popAll());
+            showPileDOM.innerHTML = '';
+        }   
+        console.log('mainPile',mainPile);
+        console.log(showPile)
+    }); 
 
- function render() {
+
+    /* --- MODEL Data --- */
     lastCardInPileMOD = [];
     pairsMOD = [];
     for (let pileMOD of allPilesMOD ) { 
@@ -79,6 +86,7 @@ function renderPile(pile, index, dataPileDOM ) {
         renderPile(piles[i], i, querySel(`[data-pile="${i+1}"] ul`))
     }
 
+    /* --- DOMAIN  --- */
     lastCardInPileDOM = [];
     pairsDOM = [];
     for (let pileDOM of allPilesDOM ) {
@@ -96,14 +104,14 @@ function renderPile(pile, index, dataPileDOM ) {
     });
     
 
-    clickedCardInPile( pairsArray ); //cambiarnombre a prepare events
+    cardsEventsForGaming( pairsArray );
 }
 render();
 
 
 
 /*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
-function clickedCardInPile( pairsArray ) {
+function cardsEventsForGaming( pairsArray ) {
     for( let b= 0; pairsArray.length > b; b++ )  {
         if ( pairsArray[b].lastCardInPileDOM != null ) {
             pairsArray[b].lastCardInPileDOM.addEventListener('mousedown', dragStart(pairsArray[b].lastCardInPileDOM, pairsArray[b].lastCardInPileMOD, pairsArray[b].pileMOD));
@@ -168,7 +176,6 @@ function dragEnd(card) {
         card.removeAttribute('id');
     })
 }
-
 
 
 

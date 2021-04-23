@@ -19,6 +19,9 @@ export default class Deck {
     push(card) {
         this.cards.push(card)
     }
+    pushAll(getCards){
+        this.cards = getCards;
+    }
     /* Shuffle the cards in random order */
     shuffle() {
         for ( let i = this.cards.length - 1; i > 0; i--) {
@@ -38,35 +41,22 @@ class Pile {
     constructor(cards, idClass, pileType) {
         this.cards = cards,
         this.pileType = pileType;
-        //externalizar - pending TO DO -
-        this.pileDiv = document.createElement('div');
-        this.pileDiv.innerText = this.numberOfCards;
-        this.pileDiv.classList.add('pile',`pile-${idClass}`);
     }
     get numberOfCards() { return this.cards.length }
-    createHTML() {
-        return this.pileDiv
-    }
-    refresh() {
-        this.pileDiv.innerText = this.numberOfCards;
-    }
+
     pushCard(card) {
         this.cards.push(card);
-        this.refresh();
+    }
+    unshiftCard(card) {
+        this.cards.unshift(card);
     }
     popCard() {
         let retCard = this.cards.pop();
-        this.refresh();
         return retCard;
-    }
-    pushAll(getCards){
-        this.cards = getCards;
-        this.refresh();
     }
     popAll(){
         let retCards = this.cards;
-        this.cards =[];
-        this.refresh();
+        this.cards = [];
         return retCards;
     }
 
@@ -87,6 +77,7 @@ class Pile {
 
             default: //piles -> "♠", "♣", "♥", "♦"
                 if (this.cards.length === 0) { 
+                    console.log(card.amout)
                     acceptedCard = card.suit === this.pileType && card.amout === 1;
                 } else {
                     acceptedCard = card.suit === this.pileType && card.amount === this.cards[this.cards.length-1].amount +1 ; 
