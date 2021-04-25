@@ -22,6 +22,7 @@ ul {
 
 .pile-list {
   min-height: 150px;
+  z-index: 9999;
 }
 
 /* -------------- GAME BOARD --------------*/
@@ -258,6 +259,7 @@ ul {
   margin: 0;
   padding: 0;
   margin-top: -20px;
+  height: 300px;
 }
 
 .game-container .second-cards-row .seven-pile .pile ul li:nth-child(1) {

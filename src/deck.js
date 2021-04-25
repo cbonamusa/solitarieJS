@@ -60,9 +60,9 @@ class Pile {
         return retCards;
     }
 
-    canPushCard(card) {
+    canPushCard(card, pileType) {
         let acceptedCard = false;
-        switch(this.pileType) {
+        switch(pileType) {
             case 'acceptAll':
                 acceptedCard = true;
                 break;
@@ -75,12 +75,35 @@ class Pile {
                 acceptedCard = card.color != this.cards[this.cards.length-1].color && card.amount === this.cards[this.cards.length-1].amount -1 || this.cards.length === 0 && card.amount === 13;
                 break;
 
-            default: //piles -> "♠", "♣", "♥", "♦"
-                if (this.cards.length === 0) { 
-                    console.log(card.amout)
-                    acceptedCard = card.suit === this.pileType && card.amout === 1;
+            case "♠": 
+                if (this.cards.length == 0) { 
+                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
                 } else {
-                    acceptedCard = card.suit === this.pileType && card.amount === this.cards[this.cards.length-1].amount +1 ; 
+                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
+                }
+                break;
+
+            case "♣": 
+                if (this.cards.length == 0) { 
+                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
+                } else {
+                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
+                }
+                break;
+
+            case "♥": 
+                if (this.cards.length == 0) {   
+                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
+                } else {
+                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
+                }
+                break;
+
+            case "♦": 
+                if (this.cards.length == 0) { 
+                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
+                } else {
+                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
                 }
                 break;
         }

@@ -16,7 +16,6 @@ deck.shuffle();
 /*---------------------- GENERATE ALL PILES WITH CARDS ------------------------*/
 let piles = new Array();
 for ( let i = 1; i <= 7; i++ ) { piles.push(new Pile(deck.cards.splice(0,i), `pile-${i}`, "descendence")); }
-//let mainPile = new Pile(deck.cards, 'main', 'dontAccept'); 
 let mainPile = deck;
 let showPile = new Pile(new Array(), 'show', 'acceptAll');
 
@@ -24,7 +23,6 @@ let spadePile = new Pile(new Array(), 'spade', '♠');
 let heartPile = new Pile(new Array(), 'heart', '♥');
 let diamondPile = new Pile(new Array(), 'diamond', '♦');
 let clubsPile = new Pile(new Array(), 'clubs', '♣');
-
 
 
 
@@ -50,16 +48,15 @@ mainPileDOM.appendChild(divMainPile);
 
 
 
+
 /*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
 function renderPile(pile,  dataPileDOM) {
     dataPileDOM.innerHTML = '';
     for( let x = 0; x < pile.cards.length ; x++ ) {
         dataPileDOM.appendChild(pile.cards[x].generateDOMElement('show'));
     }
-
-
-
 }
+
 
 function render() {
     /* --- render main pile and show --- */
@@ -68,42 +65,32 @@ function render() {
             showPile.unshiftCard(mainPile.cards.pop());
             divMainPile.innerText = mainPile.cards.length;
             renderPile(showPile, showPileDOM);
-            //cardsEventsForGaming( pairsArray );
         } else {
             mainPile.pushAll(showPile.popAll());
             showPileDOM.innerHTML = '';
-        }   
+        }
     }); 
 
-
     /* --- MODEL Data --- */
-    // lastCardInPileMOD = [];
     pairsMOD = [];
-    for (let pileMOD of allPilesMOD ) { 
-        if (pileMOD.cards.length > 0) { lastCardInPileMOD.push(pileMOD.cards[pileMOD.cards.length -1]) }
-        pairsMOD.push( {lastCardInPileMOD: pileMOD.cards[pileMOD.cards.length -1], pileMOD});
-    }
-
+    for (let pileMOD of allPilesMOD ) { pairsMOD.push( {pileMOD}); }
+    
     for (let i = 0; i < piles.length; i++) {
         renderPile(piles[i], querySel(`[data-pile="${i+1}"] ul`))
     }
 
     /* --- DOMAIN  --- */
-    // lastCardInPileDOM = [];
     pairsDOM = [];
-    for (let pileDOM of allPilesDOM ) {
-        if (pileDOM.hasChildNodes()) { lastCardInPileDOM.push(pileDOM.lastElementChild); }
-        pairsDOM.push({lastCardInPileDOM: pileDOM.lastElementChild, pileDOM}) 
-    }
+    for (let pileDOM of allPilesDOM ) { pairsDOM.push({pileDOM}) }
+
     
     pairsArray = pairsDOM.map(function(item, index) {
         return {
-             //lastCardInPileDOM: item.lastCardInPileDOM, 
              pileDOM: item.pileDOM,
-             //lastCardInPileMOD: pairsMOD[index].lastCardInPileMOD,
              pileMOD: pairsMOD[index].pileMOD
          }
-     });    
+     });  
+     
      cardsEventsForGaming( pairsArray );
 }
 render();
@@ -113,17 +100,11 @@ render();
 /*---------------------------- CLICK CARDS / DRAG CARDS  ----------------------------*/ 
 function cardsEventsForGaming( pairsArray ) {
     for( let b= 0; pairsArray.length > b; b++ )  {
-        console.log(pairsArray[b].pileDOM.lastElementChild)
         if ( pairsArray[b].pileDOM.lastElementChild != null ) {
             pairsArray[b].pileDOM.lastElementChild.addEventListener('mousedown', dragStart(pairsArray[b].pileDOM.lastElementChild, pairsArray[b].pileMOD.cards[pairsArray[b].pileMOD.cards.length -1], pairsArray[b].pileMOD));
             pairsArray[b].pileDOM.lastElementChild.addEventListener('mouseup', dragEnd(pairsArray[b].pileDOM.lastElementChild));        
         }  
     }
-
-    // document.querySelector('.pile-main').addEventListener('click', () => {
-    //     showPileDOM.firstElementChild.addEventListener('mousedown', dragStart(showPileDOM.firstElementChild, showPile.cards[0] , showPile));
-    //     showPileDOM.firstElementChild.addEventListener('mouseup', dragEnd(showPileDOM.firstElementChild));
-    // });
 }
 
 
@@ -147,20 +128,35 @@ function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
 function dragOver(pileDOM, pileMOD,  selectedCardMOD) {
     pileDOM.addEventListener('dragover', ev => {
         ev.preventDefault();
-        pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD,  selectedCardMOD));
     });
+    dragEnter(pileDOM, pileMOD,  selectedCardMOD)
 }
 
 
-function dragDrop(pileDOM, pileMOD,  selectedCardMOD) {
-        if (pileMOD.canPushCard(selectedCardMOD)) {
-            if (pileMOD.pileType == 'descendence' ) { 
-                pileDOM.appendChild(document.getElementById('dragging'));           
-            } else {
-                pileDOM.prepend(document.getElementById('dragging'));
+function dragEnter(pileDOM, pileMOD,  selectedCardMOD) {
+    document.addEventListener("dragenter", function( event ) {
+        let pileMODTYPE;
+        setTimeout(function() {
+            for (let pair of pairsArray) {
+                if (pair.pileDOM == event.target || pair.pileDOM.contains(event.target) ) {               
+                   pileMODTYPE = pair.pileMOD.pileType
+                   pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD, selectedCardMOD, pileMODTYPE));
+                }
             }
-            render();
+        },500)
+    }, false);
+}
+
+
+function dragDrop(pileDOM, pileMOD,  selectedCardMOD, pileMODTYPE) {
+    if (pileMOD.canPushCard(selectedCardMOD, pileMODTYPE)) {
+        if (pileMOD.pileType == 'descendence' ) { 
+            pileDOM.appendChild(document.getElementById('dragging'));           
+        } else {
+            pileDOM.prepend(document.getElementById('dragging'));
         }
+        render();
+    }
 }
 
 
