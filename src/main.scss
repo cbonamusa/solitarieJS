@@ -120,10 +120,10 @@ ul { padding: 0}
             ul {
                 margin: 0;
                 padding: 0;
-                @for $i from 0 through 5 {
+                @for $i from 0 through 24 {
                     li:nth-child(#{$i}) {
-                        top: $i * 2px; 
-                        z-index:  5 - $i ;
+                        top: $i * 0.3px; 
+                        z-index:  5 + $i ;
                     }
                 }
             }

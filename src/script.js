@@ -17,7 +17,7 @@ deck.shuffle();
 let piles = new Array();
 for ( let i = 1; i <= 7; i++ ) { piles.push(new Pile(deck.cards.splice(0,i), `pile-${i}`, "descendence")); }
 let mainPile = deck;
-let showPile = new Pile(new Array(), 'show', 'acceptAll');
+let showPile = new Pile(new Array(), 'show', 'acceptAll-X');
 
 let spadePile = new Pile(new Array(), 'spade', '♠');
 let heartPile = new Pile(new Array(), 'heart', '♥');
@@ -30,8 +30,6 @@ let clubsPile = new Pile(new Array(), 'clubs', '♣');
 let allPilesMOD = [showPile, spadePile, heartPile, diamondPile, clubsPile];
 for (let i = 0; i < piles.length; i++) { allPilesMOD.push(piles[i])};
 
-let lastCardInPileDOM = [];
-let lastCardInPileMOD = [];
 let pairsDOM = [];
 let pairsMOD = [];
 let pairsArray = [];
@@ -58,11 +56,12 @@ function renderPile(pile,  dataPileDOM) {
 }
 
 
+
 function render() {
     /* --- render main pile and show --- */
     document.querySelector('.pile-main').addEventListener('click', () => {
         if (mainPile.cards.length != 0) {
-            showPile.unshiftCard(mainPile.cards.pop());
+            showPile.pushCard(mainPile.cards.pop());
             divMainPile.innerText = mainPile.cards.length;
             renderPile(showPile, showPileDOM);
         } else {
@@ -90,7 +89,7 @@ function render() {
              pileMOD: pairsMOD[index].pileMOD
          }
      });  
-     
+
      cardsEventsForGaming( pairsArray );
 }
 render();
@@ -119,42 +118,38 @@ function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
             pileMOD.popCard();
         }, 50);
         pairsArray.forEach(pair => {
-            pair.pileDOM.addEventListener('mousemove', dragOver(pair.pileDOM, pair.pileMOD, selectedCardMOD));
+            pair.pileDOM.addEventListener('mousemove', dragOver(pair.pileDOM, selectedCardMOD));
         });
     });
 }
 
 
-function dragOver(pileDOM, pileMOD,  selectedCardMOD) {
+function dragOver(pileDOM,  selectedCardMOD) {
     pileDOM.addEventListener('dragover', ev => {
         ev.preventDefault();
     });
-    dragEnter(pileDOM, pileMOD,  selectedCardMOD)
+    dragEnter(selectedCardMOD)
 }
 
 
-function dragEnter(pileDOM, pileMOD,  selectedCardMOD) {
+function dragEnter( selectedCardMOD) {
     document.addEventListener("dragenter", function( event ) {
         let pileMODTYPE;
         setTimeout(function() {
             for (let pair of pairsArray) {
                 if (pair.pileDOM == event.target || pair.pileDOM.contains(event.target) ) {               
                    pileMODTYPE = pair.pileMOD.pileType
-                   pileDOM.addEventListener('drop', dragDrop(pileDOM, pileMOD, selectedCardMOD, pileMODTYPE));
+                   pair.pileDOM.addEventListener('drop', dragDrop(pair.pileDOM, pair.pileMOD, selectedCardMOD, pileMODTYPE));
                 }
             }
-        },500)
+        },300)
     }, false);
 }
 
 
 function dragDrop(pileDOM, pileMOD,  selectedCardMOD, pileMODTYPE) {
     if (pileMOD.canPushCard(selectedCardMOD, pileMODTYPE)) {
-        if (pileMOD.pileType == 'descendence' ) { 
-            pileDOM.appendChild(document.getElementById('dragging'));           
-        } else {
-            pileDOM.prepend(document.getElementById('dragging'));
-        }
+        pileDOM.appendChild(document.getElementById('dragging'));           
         render();
     }
 }
