@@ -76,29 +76,8 @@ class Pile {
                 break;
 
             case "♠": 
-                if (this.cards.length == 0) { 
-                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
-                } else {
-                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
-                }
-                break;
-
             case "♣": 
-                if (this.cards.length == 0) { 
-                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
-                } else {
-                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
-                }
-                break;
-
             case "♥": 
-                if (this.cards.length == 0) {   
-                    acceptedCard = (card.suit == pileType) && (card.amount == 1);
-                } else {
-                    acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
-                }
-                break;
-
             case "♦": 
                 if (this.cards.length == 0) { 
                     acceptedCard = (card.suit == pileType) && (card.amount == 1);
@@ -106,6 +85,7 @@ class Pile {
                     acceptedCard = card.suit == pileType && card.amount == this.cards[this.cards.length-1].amount +1 ; 
                 }
                 break;
+
         }
         if (acceptedCard) {
             this.pushCard(card);
