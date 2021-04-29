@@ -44,11 +44,22 @@ divMainPile.classList.add('pile', 'pile-main')
 mainPileDOM.appendChild(divMainPile);
 
 
-
+/* --- render main pile and show --- */
+document.querySelector('.pile-main').addEventListener('click', () => {
+    if (mainPile.cards.length != 0) {
+        showPile.pushCard(mainPile.cards.pop());
+        divMainPile.innerText = mainPile.cards.length;
+        renderPile(showPile, showPileDOM);
+    } else {
+        mainPile.pushAll(showPile.popAll());
+        showPileDOM.innerHTML = '';
+    }
+    cardsEventsForGaming( pairsArray );
+}); 
 
 
 /*--------------- RENDER CARDS OF GAME PILES & CALL EVENT CLICK F ----------------*/
-function renderPile(pile,  dataPileDOM) {
+function renderPile(pile, dataPileDOM) {
     dataPileDOM.innerHTML = '';
     for( let x = 0; x < pile.cards.length ; x++ ) {
         dataPileDOM.appendChild(pile.cards[x].generateDOMElement('show'));
@@ -56,19 +67,7 @@ function renderPile(pile,  dataPileDOM) {
 }
 
 
-
 function render() {
-    /* --- render main pile and show --- */
-    document.querySelector('.pile-main').addEventListener('click', () => {
-        if (mainPile.cards.length != 0) {
-            showPile.pushCard(mainPile.cards.pop());
-            divMainPile.innerText = mainPile.cards.length;
-            renderPile(showPile, showPileDOM);
-        } else {
-            mainPile.pushAll(showPile.popAll());
-            showPileDOM.innerHTML = '';
-        }
-    }); 
 
     /* --- MODEL Data --- */
     pairsMOD = [];
@@ -125,9 +124,9 @@ function dragStart(selectedCardDOM, selectedCardMOD, pileMOD) {
 
 
 function dragOver(pileDOM,  selectedCardMOD) {
-    pileDOM.addEventListener('dragover', ev => {
+   pileDOM.addEventListener('dragover', ev => {
         ev.preventDefault();
-    });
+   });
     dragEnter(selectedCardMOD)
 }
 
